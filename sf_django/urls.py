@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin, auth
 from django.urls import path, include
+import inventory.views
 
 urlpatterns = [
+    path('', inventory.views.home, name='home'),
     path('admin/', admin.site.urls),
     path('todo/', include('todo.urls', namespace="todo")),
     #path('account/', admin.site.urls),

@@ -1,0 +1,9 @@
+
+<ul>
+{% for i in df_result.itertuples %}
+    <li> {{ i.location }} - {{ i.pallet }} - {{ i.code }} - {{ i.origin }} -
+         {{ i.product_type }} - {{ i.Inward}} - {{ i.ITEM1 }} - {{ i.unit }} - 
+         {{ i.pickup }} - {{ i.NewBalance }} - {{ i.pmemo }} - {{ i.bbd }} 
+    </li>                     
+{% endfor %}
+</ul>
