@@ -20,7 +20,7 @@ import inventory.views
 urlpatterns = [
     path('', inventory.views.home, name='home'),
     path('admin/', admin.site.urls),
-    path('todo/', include('todo.urls', namespace="todo")),
+    #path('todo/', include('todo.urls', namespace="todo")),
     #path('account/', admin.site.urls),
     #path('accounts/', include('django.contrib.auth.urls')),
 ]

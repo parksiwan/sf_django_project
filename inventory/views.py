@@ -73,9 +73,9 @@ def read_excel():
     #all_df = all_df.reset_index()
     #all_df.drop(axis=1, inplace=True)
     #print(all_df[all_df['code'] == 'SHF17'])
-    #return all_df[all_df['ITEM1'].str.contains('Tsuk')]
+    return all_df[all_df['ITEM1'].str.contains('Tsuk')]
     #print(all_df[all_df['pallet'].str.contains('L')])
-    return all_df[all_df['location'] == 'HE']
+    #return all_df[all_df['location'] == 'HE']
 
 def generate_data_frame(file_path, file_name):    
     loc = (file_path)     

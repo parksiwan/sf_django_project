@@ -1,9 +1,43 @@
+{% extends 'inventory/base.html' %}
 
-<ul>
-{% for i in df_result.itertuples %}
-    <li> {{ i.location }} - {{ i.pallet }} - {{ i.code }} - {{ i.origin }} -
-         {{ i.product_type }} - {{ i.Inward}} - {{ i.ITEM1 }} - {{ i.unit }} - 
-         {{ i.pickup }} - {{ i.NewBalance }} - {{ i.pmemo }} - {{ i.bbd }} 
-    </li>                     
-{% endfor %}
-</ul>
+{%  block body %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Location</th>
+            <th>Pallet</th>
+            <th>Code</th>
+            <th>Origin</th>
+            <th>Type</th>
+            <th>Inward</th>
+            <th>Name</th>
+            <th>Unit</th>
+            <th>Pickup</th>
+            <th>Balance</th>
+            <th>Memo</th>
+            <th>BBD</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        {% for i in df_result.itertuples %}
+        <tr>
+            <td>{{ i.location }}</td>
+            <td>{{ i.pallet }}</td>
+            <td>{{ i.code }}</td>
+            <td>{{ i.origin }}</td>
+            <td>{{ i.product_type }}</td>
+            <td>{{ i.Inward}}</td>
+            <td>{{ i.ITEM1 }}</td>
+            <td>{{ i.unit }}</td>
+            <td>{{ i.pickup }}</td>
+            <td>{{ i.NewBalance }}</td>
+            <td>{{ i.pmemo }}</td>
+            <td>{{ i.bbd }}</td>                                 
+        </tr>
+        {% endfor %}
+            
+    </tbody>
+</table>
+
+{% endblock %}

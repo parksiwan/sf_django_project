@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'sales',
     'import_export',
     'django_admin_listfilter_dropdown',
-    'todo'
+    #'todo'
 ]
 
 SITE_ID = 1  # need to add for 'todo' and then should exceute 'makemigrations' and 'migrate'!!!
