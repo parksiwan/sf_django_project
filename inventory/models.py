@@ -48,6 +48,8 @@ class Stock(models.Model):
     bbd = models.DateField(null=True)
     # Storage location
     location = models.CharField(max_length=20, null=True)
+    origin = models.CharField(max_length=10, null=True)
+    product_name_jp = models.CharField(max_length=300, null=True)
     #bbd = models.DateField(null=True, blank=True)
     #class Meta:
     #    abstract = True

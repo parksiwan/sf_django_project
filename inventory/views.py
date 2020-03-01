@@ -11,16 +11,27 @@ from django.http import HttpResponse
 
 
 # Create your views here.
-def home(request):
+def home(request):    
+    return render(request, 'inventory/home.html')
+
+
+def stock(request):
     #jobs = Job.objects
     #return render(request, 'inventory/home.html', {'jobs': jobs})
-    df_result = read_excel()
-    #context = dict(df_result)
-    print(df_result)
+    form_parms = request.GET
+    location = form_parms['location']
+    code = form_parms['code']
+    product_name = form_parms['product_name']
+    pallet = form_parms['pallet']
+    print(location)
+    df_result, pallet_qty = read_excel(location, code, product_name, pallet)    
+    
     #stock = df_result.to_dict()
     
     #return HttpResponse(df_result.to_html())
-    return render(request, 'inventory/home.html', {'df_result': df_result} )
+    return render(request, 'inventory/stock.html', {'df_result': df_result, 'pallet_qty' : pallet_qty} )
+
+
 
 def is_date(string, fuzzy=False):
     """
@@ -54,7 +65,7 @@ def convert_excel_date(excel_book, excel_date):
     return py_date
 
 
-def read_excel():
+def read_excel(location, code, product_name, pallet):
     # Change directory
     #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\Siwan\StockFiles")
              
@@ -70,12 +81,22 @@ def read_excel():
         # calculate number of pallets
         all_df = pd.concat([all_df, df], ignore_index=True)
         #os.chdir('/home/siwanpark/ExcelData/Alex/')
+
+    if location != '':
+        all_df = all_df[all_df['location'].str.upper() == location.upper()]
+        
+    if code != '':
+        all_df = all_df[all_df['code'].str.upper() == code.upper()]
+    
+    if product_name != '':        
+        all_df = all_df[(all_df['ITEM1'].str.upper()).str.contains(product_name.upper())]
+    
+    if pallet != '':
+        all_df = all_df[(all_df['pallet'].str.upper()).str.contains(pallet.upper())]
+
     #all_df = all_df.reset_index()
-    #all_df.drop(axis=1, inplace=True)
-    #print(all_df[all_df['code'] == 'SHF17'])
-    return all_df[all_df['ITEM1'].str.contains('Tsuk')]
-    #print(all_df[all_df['pallet'].str.contains('L')])
-    #return all_df[all_df['location'] == 'HE']
+    #all_df.drop(axis=1, inplace=True)    
+    return all_df, len(all_df['pallet'].unique())
 
 def generate_data_frame(file_path, file_name):    
     loc = (file_path)     
@@ -101,10 +122,10 @@ def generate_data_frame(file_path, file_name):
         else:
             bbd_date = sheet.cell(i, 18).value
             #print('{} - {}'.format(sheet.cell(i, 18).ctype, sheet.cell(i, 18).value))     
-            #        
-        if ('Freezer' in file_name or 'Lucky' in file_name or 'OSP' in file_name or 'SR' in file_name or 'KKS' or 'Daily' in file_name):
+            #              
+        if ('Freezer' in file_name or 'Lucky' in file_name or 'OSP' in file_name or 'SR' in file_name or 'KKS' in file_name or 'Daily' in file_name):            
             product_type = 'FRZ'
-        else:
+        else:            
             product_type = 'DRY'     
             
         # Assign location of storage
@@ -122,13 +143,7 @@ def generate_data_frame(file_path, file_name):
             location = 'Alex'	    
         elif 'Daily' in file_name:
             location = 'Alex(D)'	    
-        '''
-        stock_data = {'location': location, 'pallet': sheet.cell(i, 3).value, 'code' : sheet.cell(i, 4).value, 'origin' : sheet.cell(i, 0).value, 
-                      'product_type': product_type, 'Inward' : inward_date, 'Movement' : sheet.cell(i, 8).value, 
-                      'ITEM1' : sheet.cell(i, 9).value, 'ITEM2' : sheet.cell(i, 10).value, 'PreviousBalance' : sheet.cell(i, 12).value, 
-                      'unit': sheet.cell(i, 13).value, 'pickup' : sheet.cell(i, 14).value, 'NewBalance' : sheet.cell(i, 15).value, 
-                      'pmemo' : sheet.cell(i, 17).value, 'bbd' : bbd_date }        
-        '''
+        
         stock_data = {'location': location, 'pallet': sheet.cell(i, 3).value, 'code' : sheet.cell(i, 4).value, 'origin' : sheet.cell(i, 0).value, 
                       'product_type': product_type, 'Inward' : inward_date, 'ITEM1' : sheet.cell(i, 9).value,  
                       'unit': sheet.cell(i, 13).value, 'pickup' : sheet.cell(i, 14).value, 'NewBalance' : sheet.cell(i, 15).value, 

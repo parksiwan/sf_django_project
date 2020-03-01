@@ -1,43 +1,29 @@
 {% extends 'inventory/base.html' %}
 
 {%  block body %}
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Location</th>
-            <th>Pallet</th>
-            <th>Code</th>
-            <th>Origin</th>
-            <th>Type</th>
-            <th>Inward</th>
-            <th>Name</th>
-            <th>Unit</th>
-            <th>Pickup</th>
-            <th>Balance</th>
-            <th>Memo</th>
-            <th>BBD</th>
-        </tr>
-    </thead>
-    <tbody>
-        
-        {% for i in df_result.itertuples %}
-        <tr>
-            <td>{{ i.location }}</td>
-            <td>{{ i.pallet }}</td>
-            <td>{{ i.code }}</td>
-            <td>{{ i.origin }}</td>
-            <td>{{ i.product_type }}</td>
-            <td>{{ i.Inward}}</td>
-            <td>{{ i.ITEM1 }}</td>
-            <td>{{ i.unit }}</td>
-            <td>{{ i.pickup }}</td>
-            <td>{{ i.NewBalance }}</td>
-            <td>{{ i.pmemo }}</td>
-            <td>{{ i.bbd }}</td>                                 
-        </tr>
-        {% endfor %}
-            
-    </tbody>
-</table>
+<br>
+<form action="{% url 'stock' %}">
+    <div class="form-row">
+      <div class="col-lg-2 mb-4">        
+        <label for="validationDefault01">Total pallet QTY is {{ pallet_qty }}</label>
+      </div>
+      <div class="col-lg-2 mb-4">        
+        <input type="text" class="form-control" id="validationDefault01" placeholder="Type Location.." value="" name="location" >
+      </div>
+      <div class="col-lg-2 mb-4">        
+        <input type="text" class="form-control" id="validationDefault02" placeholder="Type Code.." value="" name="code">
+      </div>      
+      <div class="col-lg-2 mb-4">        
+        <input type="text" class="form-control" id="validationDefault02" placeholder="Type Name.." value="" name="product_name" >        
+      </div>
+      <div class="col-lg-2 mb-4">                
+        <input type="text" class="form-control" id="validationDefault02" placeholder="Type Pallet.." value="" name="pallet" >        
+      </div>
+      <div class="col-lg-2 mb-4">        
+        <button class="btn btn-primary" type="submit">Search</button>      
+      </div>
+    </div>    
+  </form>
+  
 
 {% endblock %}

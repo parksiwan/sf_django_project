@@ -9,7 +9,7 @@ from django_admin_listfilter_dropdown.filters import (DropdownFilter)
 @admin.register(Stock)
 #class ViewAdmin(admin.ModelAdmin):
 class ViewAdmin(ImportExportModelAdmin):
-    list_display = ['update_date', 'product_type', 'sf_code', 'inward', 'product_name', 'new_balance', 'unit', 'bbd', 'location']
+    list_display = ['update_date', 'product_type', 'sf_code', 'origin', 'inward', 'product_name', 'new_balance', 'unit', 'bbd', 'location']
     search_fields = ['sf_code', 'product_name', 'update_date', 'location']
     filter_horizontal = ()
     list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('product_name', DropdownFilter), ('unit', DropdownFilter), ('location', DropdownFilter)]
