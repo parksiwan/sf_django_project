@@ -24,13 +24,19 @@ def stock(request):
     product_name = form_parms['product_name']
     pallet = form_parms['pallet']
     print(location)
-    df_result, pallet_qty = read_excel(location, code, product_name, pallet)    
-    
-    #stock = df_result.to_dict()
+    df_result, pallet_qty = read_excel(location, code, product_name, pallet)            
     
     #return HttpResponse(df_result.to_html())
     return render(request, 'inventory/stock.html', {'df_result': df_result, 'pallet_qty' : pallet_qty} )
 
+
+def tf_stock(request):
+    tf_code_list = ['TF01B', 'CLV06', 'TF77', 'TF74', 'TF15', 'BEC03', 'BEC02', 'TFB2A', 'TFB25',
+                 'TFB26', 'TFS01', 'TF34C', 'RUM05', 'TF83', 'TF83A', 'TF83B', 'TF83D', 'TF83E',
+                 'TF83G', 'TF97', 'TF98', 'TF88', 'TF66Material', 'TF100', 'OCP69', 'ZN07',
+                 'TF61', 'TF102', 'CFS01', 'CFS02', 'TF103', 'TF104']
+    df_result = read_excel_for_tfstock(tf_code_list)
+    return render(request, 'inventory/tf_stock.html', {'df_result': df_result} )
 
 
 def is_date(string, fuzzy=False):
@@ -63,6 +69,39 @@ def convert_excel_date(excel_book, excel_date):
     year, month, day, hour, minute, second = xlrd.xldate_as_tuple(ms_bbd_date_number, excel_book.datemode)
     py_date = datetime.datetime(year, month, day, hour, minute, second)
     return py_date
+
+
+def read_excel_for_tfstock(code_list):
+    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\Siwan\StockFiles")
+             
+    os.chdir('/home/siwanpark/ExcelData/Alex/')
+    excel_files = glob.glob('*.xls*')
+    all_df = pd.DataFrame()
+    selected_df = pd.DataFrame()
+    for excel_file in excel_files:
+        # Give the location of the file 
+        #file_path = "Alex 2019 09 AUG D12-14.xlsm"
+        #print(excel_file)
+        file_name = excel_file.split('.')[0]
+        df = generate_data_frame(excel_file, file_name)  #generate data frame
+        # calculate number of pallets
+        all_df = pd.concat([all_df, df], ignore_index=True)
+        #os.chdir('/home/siwanpark/ExcelData/Alex/')
+    
+    all_df['unit'] = all_df['unit'].str.upper()
+    for code in code_list:
+        temp_df = all_df[['location', 'code', 'ITEM1', 'unit', 'NewBalance']]
+        temp_df = temp_df[temp_df['code'].str.upper() == code.upper()]
+        
+        temp_df = temp_df.groupby(['location', 'code', 'ITEM1', 'unit']).agg('sum').reset_index()
+        
+        selected_df = pd.concat([selected_df, temp_df], ignore_index=True)
+   
+    #all_df = all_df.reset_index()
+    #all_df.drop(axis=1, inplace=True)    
+    #sselected_df = selected_df.groupby([ 'location', 'code', 'unit']).agg('sum')
+    print(selected_df)
+    return selected_df
 
 
 def read_excel(location, code, product_name, pallet):

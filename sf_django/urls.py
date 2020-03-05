@@ -19,6 +19,7 @@ import inventory.views
 
 urlpatterns = [
     path('', inventory.views.home, name='home'),
+    path('tf_stock/', inventory.views.tf_stock, name='tf_stock'),
     path('stock/', inventory.views.stock, name='stock'),
     path('admin/', admin.site.urls),
     #path('todo/', include('todo.urls', namespace="todo")),
