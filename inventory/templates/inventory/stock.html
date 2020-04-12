@@ -65,15 +65,14 @@
 </table>
 
 <script>
-  function search_stock() {
+  function search_stock() {      
       var input, filter, table, tr, td, i, txtValue;
       input = document.getElementById("search_keyword");
       filter = input.value.toUpperCase();
       table = document.getElementById("stock_table");
       tr = table.getElementsByTagName("tr");
       for (i = 0; i < tr.length; i++) {                
-          td = tr[i].getElementsByTagName("td")[6]; 
-          //for (var j = 0; j < td.length; j++) {
+          td = tr[i].getElementsByTagName("td")[6];             
           
           if (td) {
               txtValue = td.textContent || td.innerText;
@@ -83,9 +82,8 @@
               } else {
                   tr[i].style.display = "none";
               }                
-          }              
-          //}
-      }  
+          }                          
+      }      
   }
   </script>
   
