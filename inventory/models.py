@@ -21,6 +21,9 @@ class Usage(models.Model):
     unit = models.CharField(max_length=20)#, choices=unit_choices)
     memo = models.CharField(max_length=300)
 
+    origin = models.CharField(max_length=10, null=True)
+    product_name_jp = models.CharField(max_length=300, null=True)
+
     def __str__(self):
         return '({0}) {1} - {2} {3}'.format(self.update_date, self.sf_code, self.pickup_qty, self.unit)
 
