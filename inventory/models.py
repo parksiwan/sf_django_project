@@ -67,7 +67,7 @@ class NotUsedProductList(models.Model):
     product_name = models.CharField(max_length=300, null=True)
 
 
-class DailyUsage(models.Model):
+class aDailyUsage(models.Model):
     update_date = models.DateField()
     product_type = models.CharField(max_length=10, null=True)
     sf_code = models.CharField(max_length=20)
@@ -82,7 +82,7 @@ class DailyUsage(models.Model):
     def __str__(self):
         return '({0}) {1} - {2} {3}'.format(self.update_date, self.sf_code, self.pickup_qty, self.unit)
 
-class DailyStock(models.Model):
+class aDailyStock(models.Model):
     update_date = models.DateField()
     product_type = models.CharField(max_length=10, null=True)
     sf_code = models.CharField(max_length=20)
