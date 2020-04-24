@@ -42,3 +42,23 @@ class ViewAdmin(ImportExportModelAdmin):
     list_filter = ['usage_month', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('unit', DropdownFilter)]
     date_hierarchy = 'usage_month'
     fieldsets = ()
+
+@admin.register(aDailyUsage)
+class ViewAdmin(ImportExportModelAdmin):
+    list_display = ['update_date','product_type', 'sf_code','origin', 'product_name', 'pickup_qty', 'unit', 'memo']
+    search_fields = ['sf_code', 'update_date', 'memo', 'product_name']
+    filter_horizontal = ()
+    list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('unit', DropdownFilter)]
+    date_hierarchy = 'update_date'
+    fieldsets = ()
+
+@admin.register(aDailyStock)
+#class ViewAdmin(admin.ModelAdmin):
+class ViewAdmin(ImportExportModelAdmin):
+    list_display = ['update_date', 'product_type', 'sf_code', 'origin', 'inward', 'product_name', 'new_balance', 'unit', 'bbd', 'location']
+    search_fields = ['sf_code', 'product_name', 'update_date', 'location']
+    filter_horizontal = ()
+    list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('product_name', DropdownFilter), ('unit', DropdownFilter), ('location', DropdownFilter)]
+    date_hierarchy = 'update_date'
+    fieldsets = ()
+  
