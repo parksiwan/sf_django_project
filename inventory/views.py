@@ -39,6 +39,16 @@ def tf_stock(request):
     return render(request, 'inventory/tf_stock.html', {'df_result': df_result} )
 
 
+def daily_stock(request):    
+    df_result = read_excel_for_daily_stock()
+    print(df_result)
+    os.chdir('/home/siwanpark/ExcelData/')
+    excel_result = 'Daily_Stock_' + str(datetime.date.today()) + '.xlsx'
+    df_result.to_excel(excel_result)
+    return render(request, 'inventory/daily_stock.html', {'df_result': df_result} )
+
+
+
 def is_date(string, fuzzy=False):
     """
     Return whether the string can be interpreted as a date.
@@ -100,8 +110,29 @@ def read_excel_for_tfstock(code_list):
     #all_df = all_df.reset_index()
     #all_df.drop(axis=1, inplace=True)    
     #sselected_df = selected_df.groupby([ 'location', 'code', 'unit']).agg('sum')
-    print(selected_df)
+    #print(selected_df)
     return selected_df
+
+
+def read_excel_for_daily_stock():
+    os.chdir('/home/siwanpark/ExcelData/Alex/')
+    excel_files = glob.glob('Daily*.xls*')
+    all_df = pd.DataFrame()
+    result_df = pd.DataFrame()
+
+    for excel_file in excel_files:
+        #print(excel_file)
+        file_name = excel_file.split('.')[0]
+        df = generate_data_frame(excel_file, file_name)  #generate data frame        
+        all_df = pd.concat([all_df, df], ignore_index=True)        
+    
+    all_df['unit'] = all_df['unit'].str.upper()    
+    temp_df = all_df[['location', 'code', 'ITEM1', 'unit', 'NewBalance']]    
+    result_df = temp_df.groupby(['code', 'ITEM1', 'unit']).agg('sum').reset_index()    
+        
+    print(result_df)
+    return result_df
+
 
 
 def read_excel(location, code, product_name, pallet):
