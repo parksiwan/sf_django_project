@@ -10,3 +10,7 @@ class PackingList(models.Model):
     qty = models.FloatField(null=True)
     unit = models.CharField(max_length=20)#, choices=unit_choices)
     arrival_date = models.DateField(null=True)
+
+    class Meta:
+        verbose_name = "Dispatched product"
+        verbose_name_plural = "Dispatched products"

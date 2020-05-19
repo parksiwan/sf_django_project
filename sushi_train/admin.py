@@ -11,7 +11,7 @@ class ViewAdmin(ImportExportModelAdmin):
     list_display =['customer', 'dispatch_date', 'sf_code', 'product_name', 'qty', 'unit']    
     search_fields = ['customer', 'dispatch_date', 'sf_code', 'product_name', 'qty', 'unit']
     filter_horizontal = ()
-    list_filter = [('customer', DropdownFilter), 'dispatch_date', ('sf_code', DropdownFilter), ('product_name', DropdownFilter)]
+    list_filter = [('customer', DropdownFilter), 'dispatch_date', ('sf_code', DropdownFilter), ('product_name', DropdownFilter),('unit', DropdownFilter)]
     date_hierarchy = 'dispatch_date'
     fieldsets = ()
 

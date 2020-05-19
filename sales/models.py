@@ -11,3 +11,7 @@ class Sales(models.Model):
     product_cost = models.FloatField(null=True)
     product_price = models.FloatField(null=True)
     sales_qty = models.FloatField(null=True)
+
+    class Meta:
+        verbose_name = "SF Sale"
+        verbose_name_plural = "SF Sales"

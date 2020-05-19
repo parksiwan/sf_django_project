@@ -15,6 +15,8 @@ class ViewAdmin(ImportExportModelAdmin):
     list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('product_name', DropdownFilter), ('unit', DropdownFilter), ('location', DropdownFilter)]
     date_hierarchy = 'update_date'
     fieldsets = ()
+    
+
 
 @admin.register(CurrentStock)
 class ViewAdmin(ImportExportModelAdmin):
@@ -51,9 +53,8 @@ class ViewAdmin(ImportExportModelAdmin):
     list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('unit', DropdownFilter)]
     date_hierarchy = 'update_date'
     fieldsets = ()
-
+    
 @admin.register(aDailyStock)
-#class ViewAdmin(admin.ModelAdmin):
 class ViewAdmin(ImportExportModelAdmin):
     list_display = ['update_date', 'product_type', 'sf_code', 'origin', 'inward', 'product_name', 'new_balance', 'unit', 'bbd', 'location']
     search_fields = ['sf_code', 'product_name', 'update_date', 'location']
@@ -62,3 +63,11 @@ class ViewAdmin(ImportExportModelAdmin):
     date_hierarchy = 'update_date'
     fieldsets = ()
   
+@admin.register(StorageTransactLog)
+class ViewAdmin(ImportExportModelAdmin):
+    list_display = ['transact_date', 'transact_time', 'storage_loc', 'transact_type', 'pallet_qty', 'total_pallet_after_transaction']
+    search_fields = ['transact_date', 'storage_loc', 'transact_type' ]
+    filter_horizontal = ()
+    list_filter = ['transact_date', ('storage_loc', DropdownFilter), ('transact_type', DropdownFilter)]
+    date_hierarchy = 'transact_date'
+    fieldsets = ()

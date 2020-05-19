@@ -27,3 +27,7 @@ urlpatterns = [
     #path('account/', admin.site.urls),
     #path('accounts/', include('django.contrib.auth.urls')),
 ]
+
+admin.site.site_header = "SUSHI FACTORY SCM Data Admin"
+admin.site.site_title = "SUSHI FACTORY SCM Data Admin"
+admin.site.index_title = "Welcome to SUSHI FACTORY SCM Data Admin"

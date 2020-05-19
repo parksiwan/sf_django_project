@@ -9,8 +9,13 @@ class MonthlyUsage(models.Model):
     monthly_usage = models.FloatField(null=True)
     unit = models.CharField(max_length=20, null=True)#, choices=unit_choices)
 
+    class Meta:
+        verbose_name = "Main Monthly Usage"
+        verbose_name_plural = "Main Monthly Usages"
+
     def __str__(self):
         return '({0}) {1}'.format(self.usage_month, self.sf_code)
+
 
 class Usage(models.Model):
     update_date = models.DateField()
@@ -24,8 +29,13 @@ class Usage(models.Model):
     origin = models.CharField(max_length=10, null=True)
     product_name_jp = models.CharField(max_length=300, null=True)
 
+    class Meta:
+        verbose_name = "Main Usage"
+        verbose_name_plural = "Main Usages"
+
     def __str__(self):
         return '({0}) {1} - {2} {3}'.format(self.update_date, self.sf_code, self.pickup_qty, self.unit)
+
 
 class CurrentStock(models.Model):
     product_type = models.CharField(max_length=10, null=True)
@@ -35,6 +45,11 @@ class CurrentStock(models.Model):
     new_balance = models.FloatField()
     unit = models.CharField(max_length=20)
     bbd = models.DateField(null=True)
+
+    class Meta:
+        verbose_name = "Main Aggregated Stock"
+        verbose_name_plural = "Main Aggregated Stocks"
+
 
 class Stock(models.Model):
     update_date = models.DateField()
@@ -53,13 +68,19 @@ class Stock(models.Model):
     
     #class Meta:
     #    abstract = True
+    class Meta:
+        verbose_name = "Main Stock"
+        verbose_name_plural = "Main Stocks"
+
     def __str__(self):
         return '({0}) {1}'.format(self.update_date, self.sf_code)
-    
+
+
 class ProductList(models.Model):
     sf_code = models.CharField(max_length=20)
     product_type = models.CharField(max_length=10, null=True)
     product_name = models.CharField(max_length=300, null=True)
+
 
 class NotUsedProductList(models.Model):
     sf_code = models.CharField(max_length=20)
@@ -78,6 +99,10 @@ class aDailyUsage(models.Model):
 
     origin = models.CharField(max_length=10, null=True)
     product_name_jp = models.CharField(max_length=300, null=True)
+
+    class Meta:
+        verbose_name = "Daily Usage"
+        verbose_name_plural = "Daily Usages"
 
     def __str__(self):
         return '({0}) {1} - {2} {3}'.format(self.update_date, self.sf_code, self.pickup_qty, self.unit)
@@ -99,5 +124,36 @@ class aDailyStock(models.Model):
     
     #class Meta:
     #    abstract = True
+    class Meta:
+        verbose_name = "Daily Stock"
+        verbose_name_plural = "Daily Stocks"
+
     def __str__(self):
         return '({0}) {1}'.format(self.update_date, self.sf_code)
+
+
+class StorageTransactLog(models.Model):
+    transact_date = models.DateField()
+    transact_time = models.TimeField()
+    
+    storage_loc_choices = (
+        ('LW', 'Lucky Winner'),
+        ('OS', 'OSP'),
+        ('HS', 'Haison'),
+        ('HE', 'Hellman'),
+    )
+    storage_loc = models.CharField(max_length=10, choices=storage_loc_choices, default='LW')
+     
+    transaction_type_choices = (
+        ('IN', 'IN'),
+        ('OUT', 'OUT'),        
+    )
+    transact_type = models.CharField(max_length=20, choices=transaction_type_choices, default='OUT')
+    pallet_qty = models.FloatField(null=True)
+    total_pallet_after_transaction = models.FloatField(null=True)
+    
+    class Meta:
+        verbose_name = "Storage Transaction Log"
+        verbose_name_plural = "Storage Transaction Logs"
+
+    
