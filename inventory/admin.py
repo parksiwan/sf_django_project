@@ -65,9 +65,13 @@ class ViewAdmin(ImportExportModelAdmin):
   
 @admin.register(StorageTransactLog)
 class ViewAdmin(ImportExportModelAdmin):
-    list_display = ['transact_date', 'transact_time', 'storage_loc', 'transact_type', 'pallet_qty', 'total_pallet_after_transaction']
+    list_display = ['transact_date', 'transact_time', 'storage_loc', 'total_pallet_before_transaction', 'transact_type', 'pallet_qty', 'total_pallet_after_transaction']
     search_fields = ['transact_date', 'storage_loc', 'transact_type' ]
     filter_horizontal = ()
     list_filter = ['transact_date', ('storage_loc', DropdownFilter), ('transact_type', DropdownFilter)]
     date_hierarchy = 'transact_date'
     fieldsets = ()
+
+@admin.register(StoragePalletQty)
+class ViewAdmin(ImportExportModelAdmin):
+    list_display = ['storage_loc', 'total_pallet_qty']

@@ -14,3 +14,5 @@ class PackingList(models.Model):
     class Meta:
         verbose_name = "Dispatched product"
         verbose_name_plural = "Dispatched products"
+
+    

@@ -132,23 +132,33 @@ class aDailyStock(models.Model):
         return '({0}) {1}'.format(self.update_date, self.sf_code)
 
 
+class StoragePalletQty(models.Model):
+    storage_loc = models.CharField(max_length=10)   
+    total_pallet_qty = models.FloatField(null=True)
+
+    class Meta:
+        verbose_name = "Storage Pallet QTY"
+        verbose_name_plural = "Storage Pallet QTYs"
+
+
 class StorageTransactLog(models.Model):
     transact_date = models.DateField()
-    transact_time = models.TimeField()
-    
+    transact_time = models.TimeField()    
     storage_loc_choices = (
         ('LW', 'Lucky Winner'),
         ('OS', 'OSP'),
         ('HS', 'Haison'),
         ('HE', 'Hellman'),
     )
-    storage_loc = models.CharField(max_length=10, choices=storage_loc_choices, default='LW')
-     
+    storage_loc = models.CharField(max_length=10, choices=storage_loc_choices, default='LW')     
     transaction_type_choices = (
         ('IN', 'IN'),
         ('OUT', 'OUT'),        
     )
     transact_type = models.CharField(max_length=20, choices=transaction_type_choices, default='OUT')
+    total_pallet_before_transaction = models.FloatField(null=True)
+    #total_pallet_before_transaction = models.ForeignKey(StoragePalletQty, on_delete=models.CASCADE)
+        
     pallet_qty = models.FloatField(null=True)
     total_pallet_after_transaction = models.FloatField(null=True)
     
@@ -156,4 +166,9 @@ class StorageTransactLog(models.Model):
         verbose_name = "Storage Transaction Log"
         verbose_name_plural = "Storage Transaction Logs"
 
-    
+    def save(self, *args, **kwargs):
+        if self.transact_type == 'IN':
+            self.total_pallet_after_transaction = self.total_pallet_before_transaction + self.pallet_qty
+        else:
+            self.total_pallet_after_transaction = self.total_pallet_before_transaction - self.pallet_qty
+        super(StorageTransactLog, self).save(*args, **kwargs)
