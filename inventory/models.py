@@ -132,14 +132,6 @@ class aDailyStock(models.Model):
         return '({0}) {1}'.format(self.update_date, self.sf_code)
 
 
-class StoragePalletQty(models.Model):
-    storage_loc = models.CharField(max_length=10)   
-    total_pallet_qty = models.FloatField(null=True)
-
-    class Meta:
-        verbose_name = "Storage Pallet QTY"
-        verbose_name_plural = "Storage Pallet QTYs"
-
 
 class StorageTransactLog(models.Model):
     transact_date = models.DateField()
@@ -149,6 +141,7 @@ class StorageTransactLog(models.Model):
         ('OS', 'OSP'),
         ('HS', 'Haison'),
         ('HE', 'Hellman'),
+        ('HX', 'HerbX'),
     )
     storage_loc = models.CharField(max_length=10, choices=storage_loc_choices, default='LW')     
     transaction_type_choices = (
@@ -160,7 +153,7 @@ class StorageTransactLog(models.Model):
     #total_pallet_before_transaction = models.ForeignKey(StoragePalletQty, on_delete=models.CASCADE)
         
     pallet_qty = models.FloatField(null=True)
-    total_pallet_after_transaction = models.FloatField(null=True)
+    total_pallet_after_transaction = models.FloatField(null=True, blank=True)
     
     class Meta:
         verbose_name = "Storage Transaction Log"

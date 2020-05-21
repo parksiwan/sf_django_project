@@ -71,7 +71,3 @@ class ViewAdmin(ImportExportModelAdmin):
     list_filter = ['transact_date', ('storage_loc', DropdownFilter), ('transact_type', DropdownFilter)]
     date_hierarchy = 'transact_date'
     fieldsets = ()
-
-@admin.register(StoragePalletQty)
-class ViewAdmin(ImportExportModelAdmin):
-    list_display = ['storage_loc', 'total_pallet_qty']
