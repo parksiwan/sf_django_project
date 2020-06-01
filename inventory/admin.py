@@ -17,7 +17,6 @@ class ViewAdmin(ImportExportModelAdmin):
     fieldsets = ()
     
 
-
 @admin.register(CurrentStock)
 class ViewAdmin(ImportExportModelAdmin):
     list_display = ['end_stock_day', 'product_type', 'sf_code',  'new_balance', 'unit', 'bbd']
@@ -71,3 +70,15 @@ class ViewAdmin(ImportExportModelAdmin):
     list_filter = ['transact_date', ('storage_loc', DropdownFilter), ('transact_type', DropdownFilter)]
     date_hierarchy = 'transact_date'
     fieldsets = ()
+
+
+@admin.register(NoodleUsage)
+class ViewAdmin(ImportExportModelAdmin):
+    list_display = ['update_date', 'customer', 'sf_code', 'product_name', 'qty', 'unit']
+    search_fields = ['update_date', 'customer', 'sf_code', 'product_name']
+    filter_horizontal = ()
+    list_filter = ['update_date', ('customer', DropdownFilter), ('sf_code', DropdownFilter), ('product_name', DropdownFilter)]
+    date_hierarchy = 'update_date'
+    fieldsets = ()
+
+   

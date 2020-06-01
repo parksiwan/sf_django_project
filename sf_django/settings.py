@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'sales',
     'import_export',
     'django_admin_listfilter_dropdown',
-    'sushi_train'
+    'sushi_train',
+    'plenus',
     #'todo'
 ]
 
