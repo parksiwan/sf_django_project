@@ -209,6 +209,8 @@ def generate_data_frame(file_path, file_name):
             location = 'HE'  		    
         elif 'HAISON' in file_name:
             location = 'HS'  	
+        elif 'HUBX' in file_name:
+            location = 'HX'     
         elif 'Alex' in file_name:
             location = 'Alex'	    
         elif 'Daily' in file_name:
