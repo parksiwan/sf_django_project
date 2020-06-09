@@ -17,10 +17,10 @@ class ViewAdmin(ImportExportModelAdmin):
 
 @admin.register(MonthlyUsage)
 class ViewAdmin(ImportExportModelAdmin):
-    list_display = ['usage_month', 'product_type', 'sf_code', 'product_name', 'qty', 'unit']
+    list_display = ['usage_month', 'product_type', 'customer', 'sf_code', 'product_name', 'qty', 'unit']
     search_fields = ['sf_code', 'usage_month', 'product_name']
     filter_horizontal = ()
-    list_filter = ['usage_month', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('product_name', DropdownFilter)]
+    list_filter = ['usage_month', ('product_type', DropdownFilter), ('customer', DropdownFilter), ('sf_code', DropdownFilter), ('product_name', DropdownFilter)]
     date_hierarchy = 'usage_month'
     fieldsets = ()
 
