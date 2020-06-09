@@ -4,7 +4,7 @@ from django.db import models
 class MonthlyUsage(models.Model):
     usage_month = models.DateField()
     product_type = models.CharField(max_length=10, null=True)
-    customer = models.CharField(max_length=10, null=True)
+    customer = models.CharField(max_length=40, null=True)
     sf_code = models.CharField(max_length=20)
     plenus_code = models.CharField(max_length=20)
     product_name = models.CharField(max_length=300, null=True)
