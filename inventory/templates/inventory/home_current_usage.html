@@ -1,0 +1,41 @@
+{% extends 'inventory/base.html' %}
+
+{%  block body %}
+<br>
+<form action="{% url 'current_usage' %}">    
+    <div class="form-row">   
+      
+      <div class="col-lg-2 mb-4">    
+        <select class="custom-select" name="bbd_range" disabled>
+          <option selected>BBD range </option>
+          <option value="1">Within 1 month</option>
+          <option value="2">Within 2 month</option>
+          <option value="3">Within 3 month</option>
+          <option value="ALL">ALL</option>
+        </select>
+      </div>
+
+      <div class="col-lg-2 mb-4">        
+        <input type="text" class="form-control" id="validationDefault01" placeholder="Type Location.." value="" name="location" disabled>
+      </div>
+      <div class="col-lg-2 mb-4">        
+        <input type="text" class="form-control" id="validationDefault02" placeholder="Type Code.." value="" name="code">
+      </div>      
+      <div class="col-lg-2 mb-4">        
+        <input type="text" class="form-control" id="validationDefault02" placeholder="Type Name.." value="" name="product_name" >        
+      </div>
+      <div class="col-lg-2 mb-4">    
+        <select class="custom-select" name="sort_by">
+          <option value="1" selected hidden>Sort</option>
+          <option value="1">By Code</option>
+          <option value="2">By PickUp Date</option>          
+        </select>
+      </div>
+      <div class="col-lg-2 mb-4">        
+        <button class="btn btn-primary btn-block" type="submit">Search</button>      
+      </div>
+    </div>    
+  </form>
+  
+
+{% endblock %}

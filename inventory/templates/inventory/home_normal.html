@@ -2,10 +2,16 @@
 
 {%  block body %}
 <br>
-<form action="{% url 'stock' %}">
-    <div class="form-row">
-      <div class="col-lg-2 mb-4">        
-        <label for="validationDefault01">Total pallet QTY is {{ pallet_qty }}</label>
+<form action="{% url 'stock_normal' %}">    
+    <div class="form-row">         
+      <div class="col-lg-2 mb-4">    
+        <select class="custom-select" name="bbd_range">
+          <option value="ALL" selected hidden>BBD range </option>
+          <option value="1">Within 1 month</option>
+          <option value="2">Within 2 month</option>
+          <option value="3">Within 3 month</option>
+          <option value="ALL">ALL</option>
+        </select>
       </div>
       <div class="col-lg-2 mb-4">        
         <input type="text" class="form-control" id="validationDefault01" placeholder="Type Location.." value="" name="location" >
@@ -20,7 +26,7 @@
         <input type="text" class="form-control" id="validationDefault02" placeholder="Type Pallet.." value="" name="pallet" >        
       </div>
       <div class="col-lg-2 mb-4">        
-        <button class="btn btn-primary" type="submit">Search</button>      
+        <button class="btn btn-primary btn-block" type="submit">Search</button>      
       </div>
     </div>    
   </form>

@@ -18,10 +18,14 @@ from django.urls import path, include
 import inventory.views
 
 urlpatterns = [
-    path('', inventory.views.home, name='home'),
+    path('', inventory.views.home_normal, name='home_normal'),
+    path('home_simple/', inventory.views.home_simple, name='home_simple'),
     path('daily_stock/', inventory.views.daily_stock, name='daily_stock'),
     path('tf_stock/', inventory.views.tf_stock, name='tf_stock'),
-    path('stock/', inventory.views.stock, name='stock'),
+    path('stock_normal/', inventory.views.stock_normal, name='stock_normal'),
+    path('stock_simple/', inventory.views.stock_simple, name='stock_simple'),
+    path('home_current_usage/', inventory.views.home_current_usage, name='home_current_usage'),
+    path('current_usage/', inventory.views.current_usage, name='current_usage'),
     path('admin/', admin.site.urls),
     #path('todo/', include('todo.urls', namespace="todo")),
     #path('account/', admin.site.urls),

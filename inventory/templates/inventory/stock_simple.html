@@ -1,0 +1,89 @@
+{% extends 'inventory/base.html' %}
+
+{%  block body %}
+<br>
+<form action="{% url 'stock_simple' %}">
+    <div class="form-row">
+      <div class="col-lg-2 mb-4">    
+        <select class="custom-select" name="bbd_range">
+          <option selected>BBD range </option>
+          <option value="1">Within 1 month</option>
+          <option value="2">Within 2 month</option>
+          <option value="3">Within 3 month</option>
+          <option value="ALL">ALL</option>
+        </select>
+      </div>
+      <div class="col-lg-2 mb-4">        
+        <input type="text" class="form-control" id="validationDefault01" placeholder="Type Location.." value="" name="location" >
+      </div>
+      <div class="col-lg-2 mb-4">        
+        <input type="text" class="form-control" id="validationDefault02" placeholder="Type Code.." value="" name="code">
+      </div>      
+      <div class="col-lg-2 mb-4">        
+        <input type="text" class="form-control" id="validationDefault02" placeholder="Type Name.." value="" name="product_name" >        
+      </div>
+      <div class="col-lg-2 mb-4">    
+        <select class="custom-select" name="sort_by">
+          <option value="1" selected hidden>Sort</option>
+          <option value="1">By BBD asc</option>
+          <option value="2">By BBD desc</option>
+          <option value="3">By Code</option>          
+        </select>
+      </div>
+      <div class="col-lg-2 mb-4">        
+        <button class="btn btn-primary btn-block" type="submit">Search</button>      
+      </div>
+    </div>      
+  </form>
+
+<table id="stock_table" class="table table-hover table-sm">
+    <thead class="thead-light">
+        <tr>
+            <th>Location</th>            
+            <th>Code</th>                                    
+            <th>Name</th>
+            <th>Unit</th>            
+            <th>Balance</th>            
+            <th>BBD</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        {% for i in df_result.itertuples %}
+        <tr>
+            <td>{{ i.location }}</td>            
+            <td>{{ i.code }}</td>                                    
+            <td>{{ i.ITEM1 }}</td>
+            <td>{{ i.unit }}</td>            
+            <td>{{ i.NewBalance }}</td>            
+            <td>{{ i.bbd }}</td>                                 
+        </tr>
+        {% endfor %}
+            
+    </tbody>
+</table>
+
+<script>
+  function search_stock() {      
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("search_keyword");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("stock_table");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {                
+          td = tr[i].getElementsByTagName("td")[6];             
+          
+          if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = "";
+                  
+              } else {
+                  tr[i].style.display = "none";
+              }                
+          }                          
+      }      
+  }
+  </script>
+  
+{% endblock %}

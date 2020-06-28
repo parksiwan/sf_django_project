@@ -2,13 +2,20 @@
 
 {%  block body %}
 <br>
-<form action="{% url 'stock' %}">
+<form action="{% url 'current_usage' %}">
     <div class="form-row">
-      <div class="col-lg-2 mb-4">        
-        <label for="validationDefault01">Total pallet QTY is {{ pallet_qty }}</label>
+      <div class="col-lg-2 mb-4">    
+        <select class="custom-select" name="bbd_range" disabled>
+          <option selected>BBD range </option>
+          <option value="1">Within 1 month</option>
+          <option value="2">Within 2 month</option>
+          <option value="3">Within 3 month</option>
+          <option value="ALL">ALL</option>
+        </select>
       </div>
+
       <div class="col-lg-2 mb-4">        
-        <input type="text" class="form-control" id="validationDefault01" placeholder="Type Location.." value="" name="location" >
+        <input type="text" class="form-control" id="validationDefault01" placeholder="Type Location.." value="" name="location" disabled>
       </div>
       <div class="col-lg-2 mb-4">        
         <input type="text" class="form-control" id="validationDefault02" placeholder="Type Code.." value="" name="code">
@@ -16,28 +23,29 @@
       <div class="col-lg-2 mb-4">        
         <input type="text" class="form-control" id="validationDefault02" placeholder="Type Name.." value="" name="product_name" >        
       </div>
-      <div class="col-lg-2 mb-4">                
-        <input type="text" class="form-control" id="validationDefault02" placeholder="Type Pallet.." value="" name="pallet" >        
+      <div class="col-lg-2 mb-4">    
+        <select class="custom-select" name="sort_by">
+          <option value="1" selected hidden>Sort</option>
+          <option value="1">By Code</option>
+          <option value="2">By PickUp Date</option>          
+        </select>
       </div>
       <div class="col-lg-2 mb-4">        
-        <button class="btn btn-primary" type="submit">Search</button>      
+        <button class="btn btn-primary btn-block" type="submit">Search</button>      
       </div>
     </div>      
   </form>
-  
+
 <table id="stock_table" class="table table-hover table-sm">
     <thead class="thead-light">
         <tr>
-            <th>Location</th>
-            <th>Pallet</th>
-            <th>Code</th>
-            <th>Origin</th>
-            <th>Type</th>
-            <th>Inward</th>
+            <th>Date</th>            
+            <th>Code</th>            
+            <th>Type</th>            
             <th>Name</th>
             <th>Unit</th>
-            <th>Pickup</th>
-            <th>Balance</th>
+            <th>Movement</th>
+            <th>Pickup</th>            
             <th>Memo</th>
             <th>BBD</th>
         </tr>
@@ -46,18 +54,15 @@
         
         {% for i in df_result.itertuples %}
         <tr>
-            <td>{{ i.location }}</td>
-            <td>{{ i.pallet }}</td>
-            <td>{{ i.code }}</td>
-            <td>{{ i.origin }}</td>
-            <td>{{ i.product_type }}</td>
-            <td>{{ i.Inward}}</td>
-            <td>{{ i.ITEM1 }}</td>
+            <td>{{ i.update_date }}</td>            
+            <td>{{ i.sf_code }}</td>            
+            <td>{{ i.product_type }}</td>            
+            <td>{{ i.product_name }}</td>
             <td>{{ i.unit }}</td>
-            <td>{{ i.pickup }}</td>
-            <td>{{ i.NewBalance }}</td>
-            <td>{{ i.pmemo }}</td>
-            <td>{{ i.bbd }}</td>                                 
+            <td>{{ i.move }}</td>
+            <td>{{ i.pickup_qty }}</td>            
+            <td>{{ i.memo }}</td>
+            <td>{{ i.bbd }}</td>                                                                                             
         </tr>
         {% endfor %}
             
