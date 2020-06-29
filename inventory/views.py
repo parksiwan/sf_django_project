@@ -45,7 +45,7 @@ def stock_simple(request):
     product_name = form_parms['product_name']       
     sort_by = form_parms['sort_by']
     df_result = read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by)      
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\")
+    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
     os.chdir('/home/siwanpark/ExcelData/')
     excel_result = 'SCM_Stock_Expiring' + str(datetime.date.today()) + '.xlsx'
     df_result.to_excel(excel_result)                          
@@ -64,7 +64,7 @@ def tf_stock(request):
 def daily_stock(request):    
     df_result = read_excel_for_daily_stock()    
     #os.chdir('/home/siwanpark/ExcelData/')
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\")
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
     excel_result = 'Daily_Stock_' + str(datetime.date.today()) + '.xlsx'
     df_result.to_excel(excel_result)
     return render(request, 'inventory/daily_stock.html', {'df_result': df_result} )
