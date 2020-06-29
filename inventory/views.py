@@ -63,7 +63,8 @@ def tf_stock(request):
 
 def daily_stock(request):    
     df_result = read_excel_for_daily_stock()    
-    os.chdir('/home/siwanpark/ExcelData/')
+    #os.chdir('/home/siwanpark/ExcelData/')
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\")
     excel_result = 'Daily_Stock_' + str(datetime.date.today()) + '.xlsx'
     df_result.to_excel(excel_result)
     return render(request, 'inventory/daily_stock.html', {'df_result': df_result} )
@@ -110,9 +111,9 @@ def convert_excel_date(excel_book, excel_date):
     return py_date
 
 
-def read_excel_for_tfstock(code_list):
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\Siwan\StockFiles")             
-    os.chdir('/home/siwanpark/ExcelData/Alex/')
+def read_excel_for_tfstock(code_list):    
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
+    #os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     selected_df = pd.DataFrame()
@@ -140,7 +141,8 @@ def read_excel_for_tfstock(code_list):
 
 
 def read_excel_for_daily_stock():
-    os.chdir('/home/siwanpark/ExcelData/Alex/')
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
+    #os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('Daily*.xls*')
     all_df = pd.DataFrame()
     result_df = pd.DataFrame()
@@ -160,9 +162,9 @@ def read_excel_for_daily_stock():
 
 
 def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by):
-    # Change directory
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\Siwan\StockFiles")             
-    os.chdir('/home/siwanpark/ExcelData/Alex/')
+    # Change directory    
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
+    #os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
@@ -204,9 +206,9 @@ def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by
 
 
 def read_excel_for_current_usage(code, product_name, sort_by):
-    # Change directory
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\Siwan\StockFiles")             
-    os.chdir('/home/siwanpark/ExcelData/Alex/')
+    # Change directory    
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Usage")     
+    #os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
@@ -235,9 +237,9 @@ def read_excel_for_current_usage(code, product_name, sort_by):
 
 
 def read_excel(bbd_range, location, code, product_name, pallet):
-    # Change directory
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\Siwan\StockFiles")             
-    os.chdir('/home/siwanpark/ExcelData/Alex/')
+    # Change directory    
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")   
+    #os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
