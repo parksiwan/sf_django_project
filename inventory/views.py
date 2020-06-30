@@ -194,7 +194,7 @@ def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by
             all_df = all_df[all_df['bbd'] <= three_month]            
     
     all_df['unit'] = all_df['unit'].str.upper()        
-    result_df = all_df.groupby(['location', 'code', 'ITEM1', 'unit', 'bbd']).agg('sum').reset_index()    
+    result_df = all_df.groupby(['code', 'ITEM1', 'unit', 'bbd']).agg('sum').reset_index()    
     if sort_by == "1":
         result_df = result_df.sort_values(by='bbd',ascending=True)
     elif sort_by == "2":
