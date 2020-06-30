@@ -40,7 +40,7 @@ def stock_normal(request):
 def stock_simple(request):
     form_parms = request.GET
     bbd_range = form_parms['bbd_range']
-    location = form_parms['location']
+    #location = form_parms['location']
     code = form_parms['code']
     product_name = form_parms['product_name']       
     sort_by = form_parms['sort_by']
