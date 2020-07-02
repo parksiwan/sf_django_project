@@ -63,8 +63,8 @@ def tf_stock(request):
 
 def daily_stock(request):    
     df_result = read_excel_for_daily_stock()    
-    #os.chdir('/home/siwanpark/ExcelData/')
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
+    os.chdir('/home/siwanpark/ExcelData/')
+    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
     excel_result = 'Daily_Stock_' + str(datetime.date.today()) + '.xlsx'
     df_result.to_excel(excel_result)
     return render(request, 'inventory/daily_stock.html', {'df_result': df_result} )
@@ -112,8 +112,8 @@ def convert_excel_date(excel_book, excel_date):
 
 
 def read_excel_for_tfstock(code_list):    
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
-    #os.chdir('/home/siwanpark/ExcelData/Alex/')
+    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
+    os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     selected_df = pd.DataFrame()
@@ -141,8 +141,8 @@ def read_excel_for_tfstock(code_list):
 
 
 def read_excel_for_daily_stock():
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
-    #os.chdir('/home/siwanpark/ExcelData/Alex/')
+    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
+    os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('Daily*.xls*')
     all_df = pd.DataFrame()
     result_df = pd.DataFrame()
@@ -163,8 +163,8 @@ def read_excel_for_daily_stock():
 
 def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by):
     # Change directory    
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
-    #os.chdir('/home/siwanpark/ExcelData/Alex/')
+    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
+    os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
@@ -207,8 +207,8 @@ def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by
 
 def read_excel_for_current_usage(code, product_name, sort_by):
     # Change directory    
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Usage")     
-    #os.chdir('/home/siwanpark/ExcelData/Alex/')
+    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Usage")     
+    os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
@@ -238,8 +238,8 @@ def read_excel_for_current_usage(code, product_name, sort_by):
 
 def read_excel(bbd_range, location, code, product_name, pallet):
     # Change directory    
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")   
-    #os.chdir('/home/siwanpark/ExcelData/Alex/')
+    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")   
+    os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
@@ -337,8 +337,8 @@ def generate_current_usage(df, file_name, update_date):
     #df.to_csv('test1.csv')
     df.dropna(subset=['code', 'pickup', 'pmemo'], how='any', inplace=True)
     #df.to_csv('test2.csv')
-    df_preprocessed = df[['code', 'origin', 'Movement', 'ITEM1', 'ITEM2', 'unit', 'pickup', 'pmemo', 'bbd']]
-    df_preprocessed['update_date'] = pd.to_datetime(update_date, format='%d/%m/%Y')
+    df_preprocessed = df[['code', 'origin', 'Movement', 'ITEM1', 'ITEM2', 'unit', 'pickup', 'pmemo', 'bbd', 'Inward']]
+    df_preprocessed['update_date'] = pd.to_datetime(update_date, format='%d/%m/%Y').date()
 
     if ('Freezer' in file_name or 'Lucky' in file_name or 'OSP' in file_name or 'SR' in file_name or 'KKS' in file_name or 'Daily' in file_name):
         df_preprocessed['product_type'] = 'FRZ'
@@ -352,7 +352,7 @@ def generate_current_usage(df, file_name, update_date):
     df_preprocessed_usage = df_preprocessed
 
     data = { 'id' : df_preprocessed_usage['id'], 'update_date' : df_preprocessed_usage['update_date'],
-                'product_type' : df_preprocessed_usage['product_type'], 'sf_code' : df_preprocessed_usage['code'],
+                'product_type' : df_preprocessed_usage['product_type'], 'sf_code' : df_preprocessed_usage['code'], 'inward' : df_preprocessed_usage['Inward'],
                 'origin' : df_preprocessed['origin'], 'product_name' : df_preprocessed_usage['ITEM1'], 'product_name_jp' : df_preprocessed['ITEM2'],
                 'move' : df_preprocessed_usage['Movement'], 'unit' : df_preprocessed_usage['unit'],
                 'pickup_qty' : df_preprocessed_usage['pickup'], 'memo' : df_preprocessed_usage['pmemo'], 'bbd' : df_preprocessed_usage['bbd']}
