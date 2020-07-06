@@ -7,20 +7,36 @@
 <table id="stock_table" class="table table-hover table-sm">
     <thead class="thead-light">
         <tr>                  
+            <th>Type</th>            
             <th>Code</th>            
             <th>Name</th>
-            <th>Unit</th>            
-            <th>Balance</th>            
+            <th>Description</th>                  
+            <th>Minimum Stock</th>     
+            <th>Balance</th>       
+            <th>Unit</th>      
         </tr>
     </thead>
     <tbody>
         
         {% for i in df_result.itertuples %}
         <tr>                  
+            <td>{{ i.type }}</td>            
             <td>{{ i.code }}</td>            
-            <td>{{ i.ITEM1 }}</td>
-            <td>{{ i.unit }}</td>            
-            <td>{{ i.NewBalance }}</td>                                    
+            <td>{{ i.name }}</td>
+            <td>{{ i.description }}</td>                   
+            <td>{{ i.min_stock }}</td>
+            <td>
+                {% if i.min_stock >= i.NewBalance %}
+                    <div class="bg-danger text-white">     
+                {% elif i.NewBalance is None %}
+                    <div class="bg-danger text-white">         
+                {% else %}
+                    <div class="bg-white text-dark">
+                {% endif %}
+                {{ i.NewBalance }}
+                </div>
+            </td>           
+            <td>{{ i.unit }}</td>                              
         </tr>
         {% endfor %}
             

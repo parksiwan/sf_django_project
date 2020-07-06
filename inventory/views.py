@@ -142,23 +142,29 @@ def read_excel_for_tfstock(code_list):
 
 def read_excel_for_daily_stock():
     #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
-    os.chdir('/home/siwanpark/ExcelData/Alex/')
-    excel_files = glob.glob('Daily*.xls*')
-    all_df = pd.DataFrame()
-    result_df = pd.DataFrame()
+    os.chdir('/home/siwanpark/ExcelData/DailyStockStatus/')
+    daily_file = glob.glob('Daily*.xls*')
+    retail_status_file = glob.glob('*Retail*.xls*')    
+    daily_df = pd.DataFrame()
+    retail_status_df = pd.DataFrame()
 
-    for excel_file in excel_files:
-        #print(excel_file)
-        file_name = excel_file.split('.')[0]
-        df = generate_data_frame(excel_file, file_name)  #generate data frame        
-        all_df = pd.concat([all_df, df], ignore_index=True)        
-    
-    all_df['unit'] = all_df['unit'].str.upper()    
-    temp_df = all_df[['location', 'code', 'ITEM1', 'unit', 'NewBalance']]    
-    result_df = temp_df.groupby(['code', 'ITEM1', 'unit']).agg('sum').reset_index()    
+    #for daily_file in daily_files:        
+    daily_file_name = daily_file[0].split('.')[0]
+    df = generate_data_frame(daily_file[0], daily_file_name)  #generate data frame            
+    df['unit'] = df['unit'].str.upper()    
+    #temp_df = df[['location', 'code', 'ITEM1', 'unit', 'NewBalance']]    
+    temp_df = df[['code', 'unit', 'NewBalance']]    
+    daily_df = temp_df.groupby(['code', 'unit']).agg('sum').reset_index()    
         
-    print(result_df)
-    return result_df
+    #retail_status_file_name = retail_status_file[0].split('.')[0]
+    df = pd.read_excel(retail_status_file[0]) 
+    retail_status_df = df[['type', 'code', 'name', 'description', 'min_stock']]    
+    left_joined_df = retail_status_df.merge(daily_df, on='code', how='left')
+    #print(retail_status_df)
+    print(left_joined_df)
+    left_joined_df['NewBalance'] = left_joined_df['NewBalance'].fillna(0)
+    
+    return left_joined_df
 
 
 def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by):
