@@ -4,6 +4,7 @@ from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 import xlrd 
 import os
+import platform
 import datetime
 import glob
 import pandas as pd
@@ -24,18 +25,17 @@ def home_current_usage(request):
     return render(request, 'inventory/home_current_usage.html')
 
 
-def stock_normal(request):
-    #jobs = Job.objects
-    #return render(request, 'inventory/home.html', {'jobs': jobs})
+def stock_normal(request):    
     form_parms = request.GET
     bbd_range = form_parms['bbd_range']
     location = form_parms['location']
     code = form_parms['code']
     product_name = form_parms['product_name']
     pallet = form_parms['pallet']    
-    df_result, pallet_qty = read_excel(bbd_range, location, code, product_name, pallet)                
-    #return HttpResponse(df_result.to_html())
+    df_result, pallet_qty = read_excel(bbd_range, location, code, product_name, pallet)                    
+
     return render(request, 'inventory/stock_normal.html', {'df_result': df_result, 'pallet_qty' : pallet_qty} )
+
 
 def stock_simple(request):
     form_parms = request.GET
@@ -45,10 +45,14 @@ def stock_simple(request):
     product_name = form_parms['product_name']       
     sort_by = form_parms['sort_by']
     df_result = read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by)      
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
-    #os.chdir('/home/siwanpark/ExcelData/')
+
+    if platform.system() == 'Linux':
+        os.chdir('/home/siwanpark/ExcelData/')
+    else:
+        os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")        
     excel_result = 'SCM_Stock_Expiring' + str(datetime.date.today()) + '.xlsx'
     df_result.to_excel(excel_result)                          
+
     return render(request, 'inventory/stock_simple.html', {'df_result': df_result} )
 
 
@@ -63,10 +67,15 @@ def tf_stock(request):
 
 def daily_stock(request):    
     df_result = read_excel_for_daily_stock()    
-    #os.chdir('/home/siwanpark/ExcelData/')
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
+
+    if platform.system() == 'Linux':
+        os.chdir('/home/siwanpark/ExcelData/')
+    else:
+        os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
+
     excel_result = 'Daily_Stocks_' + str(datetime.date.today()) + '.xlsx'
     df_result.to_excel(excel_result)
+
     return render(request, 'inventory/daily_stock.html', {'df_result': df_result} )
 
 
@@ -76,10 +85,15 @@ def current_usage(request):
     product_name = form_parms['product_name']       
     sort_by = form_parms['sort_by']
     df_result = read_excel_for_current_usage(code, product_name, sort_by)   
-    #os.chdir('/home/siwanpark/ExcelData/')
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
+
+    if platform.system() == 'Linux':
+        os.chdir('/home/siwanpark/ExcelData/')
+    else:
+        os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
+
     excel_result = 'Current_Usage_' + str(datetime.date.today()) + '.xlsx'
     df_result.to_excel(excel_result)
+
     return render(request, 'inventory/current_usage.html', {'df_result': df_result} )    
 
 
@@ -116,8 +130,10 @@ def convert_excel_date(excel_book, excel_date):
 
 
 def read_excel_for_tfstock(code_list):    
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
-    #os.chdir('/home/siwanpark/ExcelData/Alex/')
+    if platform.system() == 'Linux':
+        os.chdir('/home/siwanpark/ExcelData/Alex/')
+    else:
+        os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")                 
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     selected_df = pd.DataFrame()
@@ -125,8 +141,7 @@ def read_excel_for_tfstock(code_list):
         file_name = excel_file.split('.')[0]
         df = generate_data_frame(excel_file, file_name)  #generate data frame
         # calculate number of pallets
-        all_df = pd.concat([all_df, df], ignore_index=True)
-        #os.chdir('/home/siwanpark/ExcelData/Alex/')
+        all_df = pd.concat([all_df, df], ignore_index=True)        
     
     all_df['unit'] = all_df['unit'].str.upper()
     for code in code_list:
@@ -136,55 +151,55 @@ def read_excel_for_tfstock(code_list):
         temp_df = temp_df.groupby(['location', 'code', 'ITEM1', 'unit']).agg('sum').reset_index()
         
         selected_df = pd.concat([selected_df, temp_df], ignore_index=True)
-   
-    #all_df = all_df.reset_index()
-    #all_df.drop(axis=1, inplace=True)    
-    #sselected_df = selected_df.groupby([ 'location', 'code', 'unit']).agg('sum')
-    #print(selected_df)
+       
     return selected_df
 
 
 def read_excel_for_daily_stock():
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
-    #os.chdir('/home/siwanpark/ExcelData/DailyStockStatus/')
+    if platform.system() == 'Linux':
+        os.chdir('/home/siwanpark/ExcelData/DailyStockStatus/')
+    else:
+        os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
+    
     daily_file = glob.glob('Daily*.xls*')    
     daily_df = pd.DataFrame()
     
     #for daily_file in daily_files:        
     daily_file_name = daily_file[0].split('.')[0]
     df = generate_data_frame(daily_file[0], daily_file_name)  #generate data frame            
-    df['unit'] = df['unit'].str.upper()    
-    #temp_df = df[['location', 'code', 'ITEM1', 'unit', 'NewBalance']]    
+    df['unit'] = df['unit'].str.upper()        
     temp_df = df[['code', 'unit', 'NewBalance']]    
     daily_df = temp_df.groupby(['code', 'unit']).agg('sum').reset_index()    
         
     #retail_status_file_name = retail_status_file[0].split('.')[0]
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Misc")             
-    #os.chdir('/home/siwanpark/ExcelData/DailyStockStatus/')
+    if platform.system() == 'Linux':
+        os.chdir('/home/siwanpark/ExcelData/DailyStockStatus/')
+    else:
+        os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Misc")                 
+
     retail_status_file = glob.glob('*Retail*.xls*')   
     retail_status_df = pd.DataFrame()    
     
     df = pd.read_excel(retail_status_file[0]) 
     retail_status_df = df[['type', 'code', 'name', 'description', 'min_stock']]    
-    left_joined_df = retail_status_df.merge(daily_df, on='code', how='left')
-    #print(retail_status_df)
-    print(left_joined_df)
+    left_joined_df = retail_status_df.merge(daily_df, on='code', how='left')    
     left_joined_df['NewBalance'] = left_joined_df['NewBalance'].fillna(0)
     
     return left_joined_df
 
 
 def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by):
-    # Change directory    
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
-    #os.chdir('/home/siwanpark/ExcelData/Alex/')
+    if platform.system() == 'Linux':
+        os.chdir('/home/siwanpark/ExcelData/Alex/')
+    else:
+        os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
+    
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
         file_name = excel_file.split('.')[0]
         df = generate_data_frame(excel_file, file_name)  #generate data frame        
-        all_df = pd.concat([all_df, df], ignore_index=True)
-        #os.chdir('/home/siwanpark/ExcelData/Alex/')
+        all_df = pd.concat([all_df, df], ignore_index=True)        
 
     if location != '':
         all_df = all_df[all_df['location'].str.upper() == location.upper()]
@@ -219,9 +234,11 @@ def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by
 
 
 def read_excel_for_current_usage(code, product_name, sort_by):
-    # Change directory    
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Usage")     
-    #os.chdir('/home/siwanpark/ExcelData/Alex/')
+    if platform.system() == 'Linux':
+        os.chdir('/home/siwanpark/ExcelData/Alex/')
+    else:
+        os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Usage")     
+    
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
@@ -229,8 +246,7 @@ def read_excel_for_current_usage(code, product_name, sort_by):
         temp_df, update_date = generate_data_frame_for_current_usage(excel_file)  #generate data frame
         #df1 = df.copy(deep=True)
         df = generate_current_usage(temp_df, file_name, update_date) 
-        all_df = pd.concat([all_df, df], ignore_index=True)
-        #os.chdir('/home/siwanpark/ExcelData/Alex/')
+        all_df = pd.concat([all_df, df], ignore_index=True)        
         
     if code != '':
         all_df = all_df[all_df['sf_code'].str.upper() == code.upper()]
@@ -250,16 +266,17 @@ def read_excel_for_current_usage(code, product_name, sort_by):
 
 
 def read_excel(bbd_range, location, code, product_name, pallet):
-    # Change directory    
-    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")   
-    #os.chdir('/home/siwanpark/ExcelData/Alex/')
+    if platform.system() == 'Linux':
+        os.chdir('/home/siwanpark/ExcelData/Alex/')
+    else:
+        os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")   
+    
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
         file_name = excel_file.split('.')[0]
         df = generate_data_frame(excel_file, file_name)  #generate data frame        
-        all_df = pd.concat([all_df, df], ignore_index=True)
-        #os.chdir('/home/siwanpark/ExcelData/Alex/')
+        all_df = pd.concat([all_df, df], ignore_index=True)        
 
     if location != '':
         all_df = all_df[all_df['location'].str.upper() == location.upper()]
