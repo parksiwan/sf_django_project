@@ -45,8 +45,8 @@ def stock_simple(request):
     product_name = form_parms['product_name']       
     sort_by = form_parms['sort_by']
     df_result = read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by)      
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
-    os.chdir('/home/siwanpark/ExcelData/')
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
+    #os.chdir('/home/siwanpark/ExcelData/')
     excel_result = 'SCM_Stock_Expiring' + str(datetime.date.today()) + '.xlsx'
     df_result.to_excel(excel_result)                          
     return render(request, 'inventory/stock_simple.html', {'df_result': df_result} )
@@ -63,9 +63,9 @@ def tf_stock(request):
 
 def daily_stock(request):    
     df_result = read_excel_for_daily_stock()    
-    os.chdir('/home/siwanpark/ExcelData/')
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
-    excel_result = 'Daily_Stock_' + str(datetime.date.today()) + '.xlsx'
+    #os.chdir('/home/siwanpark/ExcelData/')
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
+    excel_result = 'Daily_Stocks_' + str(datetime.date.today()) + '.xlsx'
     df_result.to_excel(excel_result)
     return render(request, 'inventory/daily_stock.html', {'df_result': df_result} )
 
@@ -75,7 +75,11 @@ def current_usage(request):
     code = form_parms['code']
     product_name = form_parms['product_name']       
     sort_by = form_parms['sort_by']
-    df_result = read_excel_for_current_usage(code, product_name, sort_by)            
+    df_result = read_excel_for_current_usage(code, product_name, sort_by)   
+    #os.chdir('/home/siwanpark/ExcelData/')
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")
+    excel_result = 'Current_Usage_' + str(datetime.date.today()) + '.xlsx'
+    df_result.to_excel(excel_result)
     return render(request, 'inventory/current_usage.html', {'df_result': df_result} )    
 
 
@@ -112,8 +116,8 @@ def convert_excel_date(excel_book, excel_date):
 
 
 def read_excel_for_tfstock(code_list):    
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
-    os.chdir('/home/siwanpark/ExcelData/Alex/')
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
+    #os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     selected_df = pd.DataFrame()
@@ -141,13 +145,11 @@ def read_excel_for_tfstock(code_list):
 
 
 def read_excel_for_daily_stock():
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
-    os.chdir('/home/siwanpark/ExcelData/DailyStockStatus/')
-    daily_file = glob.glob('Daily*.xls*')
-    retail_status_file = glob.glob('*Retail*.xls*')    
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
+    #os.chdir('/home/siwanpark/ExcelData/DailyStockStatus/')
+    daily_file = glob.glob('Daily*.xls*')    
     daily_df = pd.DataFrame()
-    retail_status_df = pd.DataFrame()
-
+    
     #for daily_file in daily_files:        
     daily_file_name = daily_file[0].split('.')[0]
     df = generate_data_frame(daily_file[0], daily_file_name)  #generate data frame            
@@ -157,6 +159,11 @@ def read_excel_for_daily_stock():
     daily_df = temp_df.groupby(['code', 'unit']).agg('sum').reset_index()    
         
     #retail_status_file_name = retail_status_file[0].split('.')[0]
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Misc")             
+    #os.chdir('/home/siwanpark/ExcelData/DailyStockStatus/')
+    retail_status_file = glob.glob('*Retail*.xls*')   
+    retail_status_df = pd.DataFrame()    
+    
     df = pd.read_excel(retail_status_file[0]) 
     retail_status_df = df[['type', 'code', 'name', 'description', 'min_stock']]    
     left_joined_df = retail_status_df.merge(daily_df, on='code', how='left')
@@ -169,8 +176,8 @@ def read_excel_for_daily_stock():
 
 def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by):
     # Change directory    
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
-    os.chdir('/home/siwanpark/ExcelData/Alex/')
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")             
+    #os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
@@ -213,8 +220,8 @@ def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by
 
 def read_excel_for_current_usage(code, product_name, sort_by):
     # Change directory    
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Usage")     
-    os.chdir('/home/siwanpark/ExcelData/Alex/')
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Usage")     
+    #os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
@@ -244,8 +251,8 @@ def read_excel_for_current_usage(code, product_name, sort_by):
 
 def read_excel(bbd_range, location, code, product_name, pallet):
     # Change directory    
-    #os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")   
-    os.chdir('/home/siwanpark/ExcelData/Alex/')
+    os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Stock")   
+    #os.chdir('/home/siwanpark/ExcelData/Alex/')
     excel_files = glob.glob('*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
