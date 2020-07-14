@@ -67,7 +67,9 @@ def tf_stock(request):
 
 def daily_stock(request):    
     df_result = read_excel_for_daily_stock()    
-
+    #print (df_result)
+    df_result['unit'] = df_result['unit'].replace(np.nan, 'No Stock')
+    df_result['min_stock'] = df_result['min_stock'].replace(np.nan, 'No MIN stock')
     if platform.system() == 'Linux':
         os.chdir('/home/siwanpark/ExcelData/')
     else:
@@ -419,7 +421,7 @@ def generate_data_frame(file_path, file_name):
             inward_date = datetime.datetime.strptime('01/01/2020', "%d/%m/%Y").date()
         
         # Convert excel date to python date       
-        print('{} | {} | {}'.format(type(inward_date), sheet.cell(i, 18).value, sheet.cell(i, 18).ctype))
+        #print('{} | {} | {}'.format(type(inward_date), sheet.cell(i, 18).value, sheet.cell(i, 18).ctype))
         if sheet.cell(i, 18).ctype == 3 or sheet.cell(i, 18).ctype == 2:               
             bbd_date = convert_excel_date(wb, sheet.cell(i, 18).value).date()            
         elif sheet.cell(i, 18).ctype == 0:

@@ -27,16 +27,23 @@
             <td>{{ i.min_stock }}</td>
             <td>
                 {% if i.min_stock >= i.NewBalance %}
-                    <div class="bg-danger text-white">     
+                    <div class="bg-warning text-dark">     
                 {% elif i.NewBalance is None %}
-                    <div class="bg-danger text-white">         
+                    <div class="bg-warning text-dark">         
                 {% else %}
                     <div class="bg-white text-dark">
                 {% endif %}
                 {{ i.NewBalance }}
                 </div>
             </td>           
-            <td>{{ i.unit }}</td>                              
+            <td>
+                {% if i.unit == 'No Stock' %}
+                    <div class="bg-danger text-white">                   
+                {% else %}
+                    <div class="bg-white text-dark">
+                {% endif %}
+                {{ i.unit }}
+            </td>                              
         </tr>
         {% endfor %}
             
