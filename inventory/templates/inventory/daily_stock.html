@@ -26,7 +26,7 @@
             <td>{{ i.description }}</td>                   
             <td>{{ i.min_stock }}</td>
             <td>
-				{% if i.NewBalance == 0 %}
+				        {% if i.NewBalance == 0 %}
                     <div class="bg-danger text-dark">   
                 {% elif i.min_stock >= i.NewBalance %}
                     <div class="bg-warning text-dark">                     
