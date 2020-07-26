@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',   # need to add for 'todo' to function properly
+    #'inventory.apps.InventoryConfig',                    
+    'django_apscheduler',
     'inventory',
     'sales',
     'import_export',
@@ -46,6 +48,17 @@ INSTALLED_APPS = [
     'plenus',
     #'todo'
 ]
+
+SCHEDULER_CONFIG = {
+    "apscheduler.jobstores.default": {
+        "class": "django_apscheduler.jobstores:DjangoJobStore"
+    },
+    'apscheduler.executors.processpool': {
+        "type": "threadpool"
+    },
+}
+
+SCHEDULER_AUTOSTART = True
 
 SITE_ID = 1  # need to add for 'todo' and then should exceute 'makemigrations' and 'migrate'!!!
 
@@ -134,3 +147,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+APSCHEDULER_DATETIME_FORMAT =  "N j, Y, f:s a"  # Default
