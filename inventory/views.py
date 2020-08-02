@@ -241,13 +241,13 @@ def read_excel_for_current_usage(code, product_name, sort_by):
     else:
         os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット\SF_Usage")     
     
-    excel_files = glob.glob('*.xls*')
+    excel_files = glob.glob('Current*.xls*')
     all_df = pd.DataFrame()
     for excel_file in excel_files:        
         file_name = excel_file.split('.')[0]        
-        temp_df, update_date = generate_data_frame_for_current_usage(excel_file)  #generate data frame
+        temp_df = generate_data_frame_for_current_usage(excel_file)  #generate data frame
         #df1 = df.copy(deep=True)
-        df = generate_current_usage(temp_df, file_name, update_date) 
+        df = generate_current_usage(temp_df, file_name) 
         all_df = pd.concat([all_df, df], ignore_index=True)        
         
     if code != '':
@@ -311,25 +311,30 @@ def read_excel(bbd_range, location, code, product_name, pallet):
 def generate_data_frame_for_current_usage(file_path):
     loc = (file_path)
     wb = xlrd.open_workbook(loc)
-    sheet = wb.sheet_by_index(0)
-    update_date = sheet.cell_value(1, 9).split(':')[1]
-
-    update_date = update_date.strip()
+    sheet = wb.sheet_by_index(0)    
 
     #for i in range(3, sheet.nrows):
     stock_list = []
-    i = 4
+    i = 1
     while sheet.cell(i, 1).value != 'end':
         # Convert excel date to python date
         #if sheet.cell(i, 5).ctype == 3:
         #    inward_date = convert_excel_date(wb, sheet.cell(i, 5).value)
         #else:
+        if sheet.cell(i, 1).ctype == 3 or sheet.cell(i, 1).ctype == 2:
+            update_date = convert_excel_date(wb, sheet.cell(i, 4).value).date()
+        elif sheet.cell(i, 1).ctype == 0:
+            update_date = datetime.datetime.strptime('01/01/2020', "%d/%m/%Y").date()
+        elif sheet.cell(i, 1).ctype == 1:
+            update_date = datetime.datetime.strptime('01/01/2020', "%d/%m/%Y").date()
+        else:
+            inward_date = datetime.datetime.strptime('01/01/2020', "%d/%m/%Y").date()           
         #    inward_date = sheet.cell(i, 5).value
-        if sheet.cell(i, 5).ctype == 3 or sheet.cell(i, 5).ctype == 2:
-            inward_date = convert_excel_date(wb, sheet.cell(i, 5).value).date()
-        elif sheet.cell(i, 5).ctype == 0:
+        if sheet.cell(i, 4).ctype == 3 or sheet.cell(i, 4).ctype == 2:
+            inward_date = convert_excel_date(wb, sheet.cell(i, 4).value).date()
+        elif sheet.cell(i, 4).ctype == 0:
             inward_date = datetime.datetime.strptime('01/01/2020', "%d/%m/%Y").date()
-        elif sheet.cell(i, 5).ctype == 1:
+        elif sheet.cell(i, 4).ctype == 1:
             inward_date = datetime.datetime.strptime('01/01/2020', "%d/%m/%Y").date()
         else:
             inward_date = datetime.datetime.strptime('01/01/2020', "%d/%m/%Y").date()                        
@@ -338,44 +343,46 @@ def generate_data_frame_for_current_usage(file_path):
         #    bbd_date = convert_excel_date(wb, sheet.cell(i, 18).value)
         #else:
         #    bbd_date = sheet.cell(i, 18).value
-        if sheet.cell(i, 18).ctype == 3 or sheet.cell(i, 18).ctype == 2:
-            bbd_date = convert_excel_date(wb, sheet.cell(i, 18).value).date()
-        elif sheet.cell(i, 18).ctype == 0:
+        if sheet.cell(i, 12).ctype == 3 or sheet.cell(i, 12).ctype == 2:
+            bbd_date = convert_excel_date(wb, sheet.cell(i, 12).value).date()
+        elif sheet.cell(i, 12).ctype == 0:
             bbd_date = inward_date
-        elif sheet.cell(i, 18).ctype == 1:
-            if sheet.cell(i, 18).value == '-':
+        elif sheet.cell(i, 12).ctype == 1:
+            if sheet.cell(i, 12).value == '-':
                 bbd_date = datetime.datetime.strptime('31/12/2099', "%d/%m/%Y").date()
-            elif sheet.cell(i, 18).value == 'Check BBD':
+            elif sheet.cell(i, 12).value == 'Check BBD':
                 one_year = datetime.timedelta(weeks=52)
                 bbd_date = inward_date + one_year
             else:
                 one_year = datetime.timedelta(weeks=52)
                 bbd_date = inward_date + one_year
 
-        stock_data = {'code' : sheet.cell(i, 4).value, 'origin' : sheet.cell(i, 0).value, 'Inward' : inward_date, 'Movement' : sheet.cell(i, 8).value,
-                      'ITEM1' : sheet.cell(i, 9).value, 'ITEM2' : sheet.cell(i, 10).value, 'PreviousBalance' : sheet.cell(i, 12).value,
-                      'unit': sheet.cell(i, 13).value, 'pickup' : sheet.cell(i, 14).value, 'NewBalance' : sheet.cell(i, 15).value,
-                      'pmemo' : sheet.cell(i, 17).value, 'bbd' : bbd_date }
+        stock_data = {'code' : sheet.cell(i, 3).value, 'origin' : sheet.cell(i, 5).value, 'Inward' : inward_date, 'Movement' : sheet.cell(i, 8).value,
+                      'ITEM1' : sheet.cell(i, 6).value, 'ITEM2' : sheet.cell(i, 7).value, 'PreviousBalance' : '',
+                      'unit': sheet.cell(i, 9).value, 'pickup' : sheet.cell(i, 10).value, 'NewBalance' : '',
+                      'pmemo' : sheet.cell(i, 11).value, 'bbd' : bbd_date, 'product_type' : sheet.cell(i, 2).value, 'update_date' : update_date   }
         stock_list.append(stock_data)
         i += 1
     result = pd.DataFrame(stock_list)
-    return result, update_date
+    return result
 
 
-def generate_current_usage(df, file_name, update_date): 
+def generate_current_usage(df, file_name): 
     df['code'].replace('', np.nan, inplace=True)
     df['pickup'].replace('', np.nan, inplace=True)
     df['pmemo'].replace('', np.nan, inplace=True)
     #df.to_csv('test1.csv')
     df.dropna(subset=['code', 'pickup', 'pmemo'], how='any', inplace=True)
     #df.to_csv('test2.csv')
-    df_preprocessed = df[['code', 'origin', 'Movement', 'ITEM1', 'ITEM2', 'unit', 'pickup', 'pmemo', 'bbd', 'Inward']]
-    df_preprocessed['update_date'] = pd.to_datetime(update_date, format='%d/%m/%Y').date()
-
+    df_preprocessed = df[['update_date', 'code', 'origin', 'Movement', 'ITEM1', 'ITEM2', 'unit', 'pickup', 'pmemo', 'bbd', 'Inward', 'product_type']]
+    #df_preprocessed['update_date'] = pd.to_datetime(update_date, format='%d/%m/%Y').date()
+    
+    '''
     if ('Freezer' in file_name or 'Lucky' in file_name or 'OSP' in file_name or 'SR' in file_name or 'KKS' in file_name or 'Daily' in file_name):
         df_preprocessed['product_type'] = 'FRZ'
     else:
         df_preprocessed['product_type'] = 'DRY'
+    '''
 
     df_preprocessed['id'] = ''
     df_preprocessed['unit'] = df_preprocessed['unit'].str.lower()
