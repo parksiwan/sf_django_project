@@ -14,7 +14,7 @@ def start():
     
 
     #scheduler.add_job(test, 'interval', seconds=10) #, id='job_id', replace_existing=True)
-    scheduler.add_job(aggregate_current_month_usage, 'interval', seconds=60) 
+    scheduler.add_job(aggregate_current_month_usage, 'interval', minutes=5) 
     #register_events(scheduler)
     
     scheduler.start()

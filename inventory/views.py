@@ -291,7 +291,7 @@ def read_excel(bbd_range, location, code, product_name, pallet):
     
     if pallet != '':
         all_df = all_df[(all_df['pallet'].str.upper()).str.contains(pallet.upper())]
-
+    '''
     if bbd_range != 'ALL':
         if bbd_range == '1':
             one_month = datetime.date.today() + relativedelta(months=+1)      
@@ -302,7 +302,8 @@ def read_excel(bbd_range, location, code, product_name, pallet):
         elif bbd_range == '3':
             three_month = datetime.date.today() + relativedelta(months=+3)      
             all_df = all_df[all_df['bbd'] <= three_month]            
-
+    '''
+    
     #all_df = all_df.reset_index()
     #all_df.drop(axis=1, inplace=True)    
     return all_df, len(all_df['pallet'].unique())
@@ -437,8 +438,9 @@ def generate_data_frame(file_path, file_name):
             if sheet.cell(i, 18).value == '-':
                 bbd_date = datetime.datetime.strptime('31/12/2099', "%d/%m/%Y").date()
             elif sheet.cell(i, 18).value == 'Check BBD':                
-                one_year = datetime.timedelta(weeks=52)      
-                bbd_date = inward_date + one_year
+                #one_year = datetime.timedelta(weeks=52)      
+                #bbd_date = inward_date + one_year
+                bbd_date = 'Check BBD'
             else:                    
                 one_year = datetime.timedelta(weeks=52)      
                 bbd_date = inward_date + one_year       
