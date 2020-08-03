@@ -211,7 +211,7 @@ def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by
     
     if product_name != '':        
         all_df = all_df[(all_df['ITEM1'].str.upper()).str.contains(product_name.upper())]        
-
+    '''
     if bbd_range != 'ALL':
         if bbd_range == '1':
             one_month = datetime.date.today() + relativedelta(months=+1)      
@@ -222,7 +222,7 @@ def read_excel_for_stock_simple(bbd_range, location, code, product_name, sort_by
         elif bbd_range == '3':
             three_month = datetime.date.today() + relativedelta(months=+3)      
             all_df = all_df[all_df['bbd'] <= three_month]            
-    
+    '''
     all_df['unit'] = all_df['unit'].str.upper()        
     result_df = all_df.groupby(['code', 'ITEM1', 'unit', 'bbd']).agg('sum').reset_index()    
     if sort_by == "1":
