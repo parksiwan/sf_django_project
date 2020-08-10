@@ -4,6 +4,8 @@ from django.contrib import admin
 from .models import *
 from import_export.admin import ImportExportModelAdmin
 from django_admin_listfilter_dropdown.filters import (DropdownFilter)
+import copy
+
 # Register your models here.
 
 @admin.register(Stock)
@@ -62,8 +64,19 @@ class ViewAdmin(ImportExportModelAdmin):
     date_hierarchy = 'update_date'
     fieldsets = ()
   
+  
+def copy_storagetransactlog(modeladmin, request, queryset):
+    # sd is an instance of SemesterDetails
+    for sd in queryset:
+        sd_copy = copy.copy(sd) # (2) django copy object
+        sd_copy.id = None   # (3) set 'id' to None to create new object
+        sd_copy.save()    # initial save       
+
+copy_storagetransactlog.short_description = "Make a Copy of TransactLog"
+
 @admin.register(StorageTransactLog)
 class ViewAdmin(ImportExportModelAdmin):
+    actions = [copy_storagetransactlog] 
     list_display = ['transact_date', 'transact_time', 'storage_loc', 'total_pallet_before_transaction', 'transact_type', 'pallet_qty', 'total_pallet_after_transaction']
     search_fields = ['transact_date', 'storage_loc', 'transact_type' ]
     filter_horizontal = ()
@@ -71,6 +84,7 @@ class ViewAdmin(ImportExportModelAdmin):
     date_hierarchy = 'transact_date'
     fieldsets = ()
 
+    
 
 @admin.register(NoodleUsage)
 class ViewAdmin(ImportExportModelAdmin):
@@ -82,3 +96,8 @@ class ViewAdmin(ImportExportModelAdmin):
     fieldsets = ()
 
    
+
+
+
+
+
