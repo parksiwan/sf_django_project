@@ -470,7 +470,7 @@ def generate_data_frame(file_path, file_name):
         
         stock_data = {'location': location, 'pallet': sheet.cell(i, 3).value, 'code' : sheet.cell(i, 4).value, 'origin' : sheet.cell(i, 0).value, 
                       'product_type': product_type, 'Inward' : inward_date, 'ITEM1' : sheet.cell(i, 9).value,  
-                      'unit': sheet.cell(i, 13).value, 'pickup' : sheet.cell(i, 14).value, 'NewBalance' : sheet.cell(i, 15).value, 
+                      'unit': sheet.cell(i, 13).value, 'pickup' : sheet.cell(i, 14).value, 'NewBalance' : sheet.cell(i, 15).value, 'gmemo' : sheet.cell(i, 16).value,
                       'pmemo' : sheet.cell(i, 17).value, 'bbd' : bbd_date }                        
         stock_list.append(stock_data)
         i += 1

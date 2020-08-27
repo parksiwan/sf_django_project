@@ -26,6 +26,7 @@ class Usage(models.Model):
     unit = models.CharField(max_length=20)#, choices=unit_choices)
     memo = models.CharField(max_length=300)
 
+    location = models.CharField(max_length=20, null=True)
     origin = models.CharField(max_length=10, null=True)
     product_name_jp = models.CharField(max_length=300, null=True)
 
@@ -141,7 +142,7 @@ class StorageTransactLog(models.Model):
         ('OS', 'OSP'),
         ('HS', 'Haison'),
         ('HE', 'Hellman'),
-        ('HX', 'HerbX'),
+        ('HX', 'HubX'),
     )
     storage_loc = models.CharField(max_length=10, choices=storage_loc_choices, default='LW')     
     transaction_type_choices = (
