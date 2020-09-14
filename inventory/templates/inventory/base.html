@@ -44,6 +44,8 @@
               <a class="dropdown-item" href="http://127.0.0.1:8000/admin" target="_blank">Data Admin</a>
               <a class="dropdown-item" href="http://127.0.0.1:8050" target="_blank">Sush Train Usage DashBoard</a>
               <a class="dropdown-item" href="http://127.0.0.1:8051" target="_blank">Plenus Usage DashBoard</a>
+              <a class="dropdown-item" href="{% url 'todo:lists' %}">Todo Lists</a>
+              <a class="dropdown-item" href="{% url 'todo:mine' %}">My Tasks</a>
             </div>
                        
           </div>
@@ -56,9 +58,13 @@
       </nav>
 
       <div class="container-fluid">
+        
+          
           {% block body %}
 
           {% endblock %}
+
+          
       </div>
   
 </body>

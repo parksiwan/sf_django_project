@@ -1,7 +1,11 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "sf_django/base.html" %}
 
+{% load static %}
 {% block extrahead %}
 	<!-- CSS and JavaScripts for django-todo -->
-	<link rel="stylesheet" type="text/css" href="{% static 'todo/css/styles.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'todo/css/style.css' %}" />	
 {% endblock extrahead %}
+
+{% block extra_js %}
+	
+{% endblock extra_js %}

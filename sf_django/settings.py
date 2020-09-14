@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django_admin_listfilter_dropdown',
     'sushi_train',
     'plenus',
-    #'todo'
+    'todo'
 ]
 
 SCHEDULER_CONFIG = {
@@ -74,12 +74,19 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'sf_django.urls'
 
-LOGIN_URL='/account/login/'
+#LOGIN_URL='/account/login/'
+
+#LOGIN_URL = 'login' 
+#LOGOUT_URL = 'logout'
+
+# config/settings.py
+LOGIN_REDIRECT_URL = '/todo/'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        #'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # added
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,7 +100,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sf_django.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -148,4 +154,46 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 APSCHEDULER_DATETIME_FORMAT =  "N j, Y, f:s a"  # Default
+
+
+TODO_STAFF_ONLY = True
+TODO_ALLOW_FILE_ATTACHMENTS = True
+TODO_ALLOWED_FILE_ATTACHMENTS = [".jpg", ".gif", ".csv", ".pdf", ".zip", ".xlsx"]
+TODO_MAXIMUM_ATTACHMENT_SIZE = 5000000  
+
+from todo.mail.producers import imap_producer
+from todo.mail.consumers import tracker_consumer
+from todo.mail.delivery import smtp_backend, console_backend
+
+# email notifications configuration
+# each task list can get its own delivery method
+TODO_MAIL_BACKENDS = {
+    # mail-queue is the name of the task list, not the worker name
+    "sfstock": smtp_backend(
+        host="smtp.gmail.com",
+        port=465,
+        use_ssl=True,
+        username="parksiwan@gmail.com",
+        password="Park1101714",
+        # used as the From field when sending notifications.
+        # a username might be prepended later on
+        from_address="parksiwan@google.com",
+        # additionnal headers
+        headers={}
+    ),
+    "sfserver": smtp_backend(
+        host="smtp.gmail.com",
+        port=465,
+        use_ssl=True,
+        username="parksiwan@gmail.com",
+        password="Park1101714",
+        # used as the From field when sending notifications.
+        # a username might be prepended later on
+        from_address="parksiwan@google.com",
+        # additionnal headers
+        headers={}
+    ),
+}

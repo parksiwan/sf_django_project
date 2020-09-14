@@ -27,9 +27,9 @@ urlpatterns = [
     path('home_current_usage/', inventory.views.home_current_usage, name='home_current_usage'),
     path('current_usage/', inventory.views.current_usage, name='current_usage'),
     path('admin/', admin.site.urls),
-    #path('todo/', include('todo.urls', namespace="todo")),
+    path('todo/', include('todo.urls', namespace="todo")),
     #path('account/', admin.site.urls),
-    #path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 admin.site.site_header = "SUSHI FACTORY SCM Data Admin"

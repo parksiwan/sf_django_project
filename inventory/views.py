@@ -323,7 +323,7 @@ def generate_data_frame_for_current_usage(file_path):
         #    inward_date = convert_excel_date(wb, sheet.cell(i, 5).value)
         #else:
         if sheet.cell(i, 1).ctype == 3 or sheet.cell(i, 1).ctype == 2:
-            update_date = convert_excel_date(wb, sheet.cell(i, 4).value).date()
+            update_date = convert_excel_date(wb, sheet.cell(i, 1).value).date()
         elif sheet.cell(i, 1).ctype == 0:
             update_date = datetime.datetime.strptime('01/01/2020', "%d/%m/%Y").date()
         elif sheet.cell(i, 1).ctype == 1:
