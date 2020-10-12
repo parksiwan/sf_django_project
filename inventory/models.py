@@ -30,6 +30,8 @@ class Usage(models.Model):
     origin = models.CharField(max_length=10, null=True)
     product_name_jp = models.CharField(max_length=300, null=True)
 
+    cust_name = models.CharField(max_length=150, null=True)
+
     class Meta:
         verbose_name = "Main Usage"
         verbose_name_plural = "Main Usages"
@@ -59,14 +61,14 @@ class Stock(models.Model):
     inward = models.DateField(null=True)
     product_name = models.CharField(max_length=300, null=True)
     new_balance = models.FloatField()
-    
+
     unit = models.CharField(max_length=20)
     bbd = models.DateField(null=True)
     # Storage location
     location = models.CharField(max_length=20, null=True)
     origin = models.CharField(max_length=10, null=True)
     product_name_jp = models.CharField(max_length=300, null=True)
-    
+
     #class Meta:
     #    abstract = True
     class Meta:
@@ -101,6 +103,8 @@ class aDailyUsage(models.Model):
     origin = models.CharField(max_length=10, null=True)
     product_name_jp = models.CharField(max_length=300, null=True)
 
+    cust_name = models.CharField(max_length=150, null=True)
+
     class Meta:
         verbose_name = "Daily Usage"
         verbose_name_plural = "Daily Usages"
@@ -116,14 +120,14 @@ class aDailyStock(models.Model):
     inward = models.DateField(null=True)
     product_name = models.CharField(max_length=300, null=True)
     new_balance = models.FloatField()
-    
+
     unit = models.CharField(max_length=20)
     bbd = models.DateField(null=True)
     # Storage location
     location = models.CharField(max_length=20, null=True)
     origin = models.CharField(max_length=10, null=True)
     product_name_jp = models.CharField(max_length=300, null=True)
-    
+
     #class Meta:
     #    abstract = True
     class Meta:
@@ -136,26 +140,27 @@ class aDailyStock(models.Model):
 
 class StorageTransactLog(models.Model):
     transact_date = models.DateField()
-    transact_time = models.TimeField()    
+    transact_time = models.TimeField()
     storage_loc_choices = (
         ('LW', 'Lucky Winner'),
+        ('LW(D)', 'Lucky Winner (Dry)'),
         ('OS', 'OSP'),
         ('HS', 'Haison'),
         ('HE', 'Hellman'),
         ('HX', 'HubX'),
     )
-    storage_loc = models.CharField(max_length=10, choices=storage_loc_choices, default='LW')     
+    storage_loc = models.CharField(max_length=10, choices=storage_loc_choices, default='LW')
     transaction_type_choices = (
         ('IN', 'IN'),
-        ('OUT', 'OUT'),        
+        ('OUT', 'OUT'),
     )
     transact_type = models.CharField(max_length=20, choices=transaction_type_choices, default='OUT')
     total_pallet_before_transaction = models.FloatField(null=True)
     #total_pallet_before_transaction = models.ForeignKey(StoragePalletQty, on_delete=models.CASCADE)
-        
+
     pallet_qty = models.FloatField(null=True)
     total_pallet_after_transaction = models.FloatField(null=True, blank=True)
-    
+
     class Meta:
         verbose_name = "Storage Transaction Log"
         verbose_name_plural = "Storage Transaction Logs"
@@ -169,17 +174,14 @@ class StorageTransactLog(models.Model):
 
 
 class NoodleUsage(models.Model):
-    update_date = models.DateField()    
-    customer = models.CharField(max_length=50, null=True)
+    update_date = models.DateField()
+    customer = models.CharField(max_length=30, null=True)
     sf_code = models.CharField(max_length=20, null=True)
     simple_name = models.CharField(max_length=20, null=True)
     product_name = models.CharField(max_length=300, null=True)
     qty = models.FloatField(null=True)
     unit = models.CharField(max_length=20)
-    
+
     class Meta:
         verbose_name = "Noodle Product Usage"
         verbose_name_plural = "Noodle Product Usages"
-
-    
-    

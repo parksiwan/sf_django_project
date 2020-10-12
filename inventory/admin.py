@@ -30,10 +30,10 @@ class ViewAdmin(ImportExportModelAdmin):
 
 @admin.register(Usage)
 class ViewAdmin(ImportExportModelAdmin):
-    list_display = ['update_date','product_type', 'sf_code','product_name', 'pickup_qty', 'unit', 'memo']
-    search_fields = ['sf_code', 'update_date', 'memo', 'product_name']
+    list_display = ['update_date','product_type', 'sf_code','product_name', 'pickup_qty', 'unit', 'cust_name']
+    search_fields = ['sf_code', 'update_date', 'cust_name', 'product_name']
     filter_horizontal = ()
-    list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('unit', DropdownFilter)]
+    list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('unit', DropdownFilter), ('cust_name', DropdownFilter)]
     date_hierarchy = 'update_date'
     fieldsets = ()
 
@@ -48,10 +48,10 @@ class ViewAdmin(ImportExportModelAdmin):
 
 @admin.register(aDailyUsage)
 class ViewAdmin(ImportExportModelAdmin):
-    list_display = ['update_date','product_type', 'sf_code','origin', 'product_name', 'pickup_qty', 'unit', 'memo']
-    search_fields = ['sf_code', 'update_date', 'memo', 'product_name']
+    list_display = ['update_date','product_type', 'sf_code','origin', 'product_name', 'pickup_qty', 'unit', 'cust_name']
+    search_fields = ['sf_code', 'update_date', 'cust_name', 'product_name']
     filter_horizontal = ()
-    list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('unit', DropdownFilter)]
+    list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('unit', DropdownFilter), ('cust_name', DropdownFilter)]
     date_hierarchy = 'update_date'
     fieldsets = ()
     
