@@ -185,3 +185,48 @@ class NoodleUsage(models.Model):
     class Meta:
         verbose_name = "Noodle Product Usage"
         verbose_name_plural = "Noodle Product Usages"
+
+
+class NoStockItems(models.Model):        
+    sf_code = models.CharField(max_length=20, null=True)    
+    product_name = models.CharField(max_length=300, null=True)
+    product_spec = models.CharField(max_length=300, null=True)
+
+    container_name_choices = (
+        ('COF', 'COF'),
+        ('TEP', 'TEP'),
+        ('TWIN', 'TWIN'),
+        ('ITABASHI', 'ITABASHI'),
+        ('QP', 'QP'),
+        ('NW', 'NW'),
+        ('VFK', 'VFK'),
+        ('EEL', 'EEL'),
+    )
+    container_name = models.CharField(max_length=50, choices=container_name_choices, null=True)    
+    container_eta = models.DateField()
+    
+    container_status_choices = (
+        ('normal', 'Normal'),
+        ('D1', 'Delay 1'),
+        ('D2', 'Delay 2'),
+        ('D3', 'Delay 3'),
+        ('D4', 'Delay 4'),
+        ('D5', 'Delay 5'),
+        ('D6', 'Delay 6'),
+    )
+    container_status = models.CharField(max_length=30, choices=container_status_choices, default='controlling')
+
+    customer = models.CharField(max_length=100, null=True)
+    stock_status_choices = (
+        ('closed', 'Closed'),
+        ('nostock', 'No Stock'),
+        ('controlling', 'Controlling'),        
+    )
+    stock_status = models.CharField(max_length=30, choices=stock_status_choices, default='controlling')
+    remark = models.TextField(blank=True, null=True)
+    
+
+    class Meta:
+        verbose_name = "No Stock Item"
+        verbose_name_plural = "No Stock Items"
+

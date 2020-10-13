@@ -95,9 +95,18 @@ class ViewAdmin(ImportExportModelAdmin):
     date_hierarchy = 'update_date'
     fieldsets = ()
 
-   
+
+@admin.register(NoStockItems)
+class ViewAdmin(ImportExportModelAdmin):
+    list_display = ['sf_code', 'product_name', 'product_spec', 'container_name']
+    search_fields = ['sf_code', 'product_name', 'product_spec', 'container_name']
+    filter_horizontal = ()
+    list_filter = [ ('customer', DropdownFilter), ('sf_code', DropdownFilter), ('product_name', DropdownFilter)]
+    #date_hierarchy = 'update_date'
+    fieldsets = ()
 
 
 
 
+    
 
