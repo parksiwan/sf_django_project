@@ -1,4 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .sf_notify import * 
+
 
 # Create your models here.
 class MonthlyUsage(models.Model):
@@ -229,4 +234,10 @@ class NoStockItems(models.Model):
     class Meta:
         verbose_name = "No Stock Item"
         verbose_name_plural = "No Stock Items"
+
+
+@receiver(post_save, sender=NoStockItems)
+def notify_staff(sender, instance, **kwargs):        
+    send_message(instance.sf_code, instance.container_name)
+    
 

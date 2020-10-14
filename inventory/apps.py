@@ -8,3 +8,4 @@ class InventoryConfig(AppConfig):
         from . import sf_scheduler
         #if settings.SCHEDULER_AUTOSTART:                          
         sf_scheduler.start()
+        

@@ -98,10 +98,10 @@ class ViewAdmin(ImportExportModelAdmin):
 
 @admin.register(NoStockItems)
 class ViewAdmin(ImportExportModelAdmin):
-    list_display = ['sf_code', 'product_name', 'product_spec', 'container_name']
-    search_fields = ['sf_code', 'product_name', 'product_spec', 'container_name']
+    list_display = ['sf_code', 'product_name', 'product_spec', 'container_name', 'container_eta', 'container_status', 'stock_status']
+    search_fields = ['sf_code', 'product_name', 'container_name', 'container_status', 'stock_status']
     filter_horizontal = ()
-    list_filter = [ ('customer', DropdownFilter), ('sf_code', DropdownFilter), ('product_name', DropdownFilter)]
+    list_filter = [ ('container_name', DropdownFilter), ('sf_code', DropdownFilter), ('container_status', DropdownFilter), ('stock_status', DropdownFilter)]
     #date_hierarchy = 'update_date'
     fieldsets = ()
 
