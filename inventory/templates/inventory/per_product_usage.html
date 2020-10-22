@@ -1,0 +1,67 @@
+{% extends 'inventory/base.html' %}
+
+{%  block body %}
+<br>
+<form action="{% url 'per_product_usage' %}">
+    <div class="form-row">
+      
+
+      
+      <div class="col-lg-2 mb-4">        
+        <input type="text" class="form-control" id="validationDefault02" placeholder="Type Code.." value="" name="code">
+      </div>      
+      
+     
+      <div class="col-lg-2 mb-4">        
+        <button class="btn btn-primary btn-block" type="submit">Search</button>      
+      </div>
+    </div>      
+  </form>
+
+<table id="stock_table" class="table table-hover table-sm">
+    <thead class="thead-light">      
+        <tr>
+          {% for ht in df_result %}
+            <th>{{ ht }}</th>            
+          {% endfor %}            
+        </tr>
+    </thead>
+
+    <tbody>        
+        {% for _, item in df_result.iterrows %}
+        <tr>
+          {% for x in item %}
+              
+              <td>{{ x }}</td>            
+             
+          {% endfor %}
+        </tr>
+        {% endfor %}
+            
+    </tbody>
+</table>
+
+<script>
+  function search_stock() {      
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("search_keyword");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("stock_table");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {                
+          td = tr[i].getElementsByTagName("td")[6];             
+          
+          if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = "";
+                  
+              } else {
+                  tr[i].style.display = "none";
+              }                
+          }                          
+      }      
+  }
+  </script>
+  
+{% endblock %}

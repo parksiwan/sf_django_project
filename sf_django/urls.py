@@ -26,6 +26,8 @@ urlpatterns = [
     path('stock_simple/', inventory.views.stock_simple, name='stock_simple'),
     path('home_current_usage/', inventory.views.home_current_usage, name='home_current_usage'),
     path('current_usage/', inventory.views.current_usage, name='current_usage'),
+    path('home_per_product_usage/', inventory.views.home_per_product_usage, name='home_per_product_usage'),
+    path('per_product_usage/', inventory.views.per_product_usage, name='per_product_usage'),
     path('admin/', admin.site.urls),
     path('todo/', include('todo.urls', namespace="todo")),
     #path('account/', admin.site.urls),

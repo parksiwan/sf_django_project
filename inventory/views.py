@@ -9,6 +9,7 @@ import datetime
 import glob
 import pandas as pd
 import numpy as np
+import psycopg2 as pg
 from django.http import HttpResponse
 
 
@@ -23,6 +24,10 @@ def home_simple(request):
 
 def home_current_usage(request):    
     return render(request, 'inventory/home_current_usage.html')
+
+
+def home_per_product_usage(request):    
+    return render(request, 'inventory/home_per_product_usage.html')
 
 
 def stock_normal(request):    
@@ -97,6 +102,19 @@ def current_usage(request):
     df_result.to_excel(excel_result)
 
     return render(request, 'inventory/current_usage.html', {'df_result': df_result} )    
+
+
+def per_product_usage(request):
+    form_parms = request.GET    
+    code = form_parms['code']    
+    df_result = read_db_for_per_product_usage(code)   
+
+    if platform.system() == 'Linux':
+        os.chdir('/home/siwanpark/ExcelData/')
+    else:
+        os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")    
+
+    return render(request, 'inventory/per_product_usage.html', {'df_result': df_result, 'range': range(len(df_result.columns))} )    
 
 
 def is_date(string, fuzzy=False):
@@ -265,6 +283,31 @@ def read_excel_for_current_usage(code, product_name, sort_by):
         result_df = all_df.sort_values(by='update_date',ascending=True)
     
     return result_df
+
+
+def read_db_for_per_product_usage(code):
+    start_date = datetime.date.today() + relativedelta(months=-7)
+    start_date = start_date.replace(day=1)
+
+    # Load data from DB
+    db_conn = pg.connect("host='localhost' dbname=sfstock user=siwan password='psw1101714'")
+    cursor = db_conn.cursor()
+    select_query = "select * from inventory_usage where update_date >= " + "'" + str(start_date) + "'"
+    df = pd.read_sql_query(select_query, con=db_conn)
+
+    # read latest 6 month
+    df_sorted = df.sort_values(by='update_date')
+    df_sorted['update_date'] = df_sorted['update_date'].apply(lambda dt: dt.replace(day=1))
+    df_sorted = df_sorted[df_sorted['sf_code'] == code]
+    df_sorted = df_sorted[["cust_name", "update_date", "sf_code", "unit", "product_name", "pickup_qty"]]    
+    #df_sorted = df_sorted[df_sorted['cust_name'] == 'GG']
+    #df_sorted
+    df_pivoted = pd.pivot_table(df_sorted, values='pickup_qty', index=['cust_name', 'unit'], columns='update_date', aggfunc=np.sum, margins=True).fillna(0)
+    #d = pd.pivot_table(df_sorted, values='pickup_qty', index=['cust_name'], columns='update_date').fillna(0)
+    df_result = df_pivoted.sort_values(('All'), ascending=False).reset_index()
+    #len(df_result.columns)
+    df_result['AVE'] = df_result['All'] / (len(df_result.columns)-1)
+    return df_result
 
 
 def read_excel(bbd_range, location, code, product_name, pallet):
