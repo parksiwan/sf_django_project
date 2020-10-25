@@ -107,14 +107,16 @@ def current_usage(request):
 def per_product_usage(request):
     form_parms = request.GET    
     code = form_parms['code']    
-    df_result = read_db_for_per_product_usage(code)   
+    df_result, prod_name = read_db_for_per_product_usage_main(code)   
+    df_result_daily, prod_name_daily = read_db_for_per_product_usage_daily(code)   
 
     if platform.system() == 'Linux':
         os.chdir('/home/siwanpark/ExcelData/')
     else:
         os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")    
 
-    return render(request, 'inventory/per_product_usage.html', {'df_result': df_result, 'range': range(len(df_result.columns))} )    
+    return render(request, 'inventory/per_product_usage.html', {'df_result': df_result, 'code': code, 'prod_name': prod_name,
+                                                                'df_result_daily': df_result_daily, 'prod_name_daily': prod_name_daily} )    
 
 
 def is_date(string, fuzzy=False):
@@ -285,7 +287,7 @@ def read_excel_for_current_usage(code, product_name, sort_by):
     return result_df
 
 
-def read_db_for_per_product_usage(code):
+def read_db_for_per_product_usage_main(code):    
     start_date = datetime.date.today() + relativedelta(months=-7)
     start_date = start_date.replace(day=1)
 
@@ -298,16 +300,58 @@ def read_db_for_per_product_usage(code):
     # read latest 6 month
     df_sorted = df.sort_values(by='update_date')
     df_sorted['update_date'] = df_sorted['update_date'].apply(lambda dt: dt.replace(day=1))
-    df_sorted = df_sorted[df_sorted['sf_code'] == code]
+    df_sorted = df_sorted[df_sorted['sf_code'].str.upper() == code.upper()]
     df_sorted = df_sorted[["cust_name", "update_date", "sf_code", "unit", "product_name", "pickup_qty"]]    
+
+    if len(df_sorted) > 0:
+        prod_name = df_sorted.iloc[0][4]
+    else:
+        prod_name = ''
     #df_sorted = df_sorted[df_sorted['cust_name'] == 'GG']
     #df_sorted
-    df_pivoted = pd.pivot_table(df_sorted, values='pickup_qty', index=['cust_name', 'unit'], columns='update_date', aggfunc=np.sum, margins=True).fillna(0)
-    #d = pd.pivot_table(df_sorted, values='pickup_qty', index=['cust_name'], columns='update_date').fillna(0)
-    df_result = df_pivoted.sort_values(('All'), ascending=False).reset_index()
-    #len(df_result.columns)
-    df_result['AVE'] = df_result['All'] / (len(df_result.columns)-1)
-    return df_result
+    if len(df_sorted) > 0:
+        df_pivoted = pd.pivot_table(df_sorted, values='pickup_qty', index=['cust_name', 'unit'], columns='update_date', aggfunc=np.sum, margins=True).fillna(0)
+        #d = pd.pivot_table(df_sorted, values='pickup_qty', index=['cust_name'], columns='update_date').fillna(0)
+        df_result = df_pivoted.sort_values(('All'), ascending=False).reset_index()
+        #len(df_result.columns)
+        df_result['AVE'] = (df_result['All'] / (len(df_result.columns)-3)).round(decimals=1)
+
+    else:
+        df_result = None
+    return df_result, prod_name
+
+
+def read_db_for_per_product_usage_daily(code):    
+    start_date = datetime.date.today() + relativedelta(months=-7)
+    start_date = start_date.replace(day=1)
+
+    # Load data from DB
+    db_conn = pg.connect("host='localhost' dbname=sfstock user=siwan password='psw1101714'")
+    cursor = db_conn.cursor()
+    select_query = "select * from inventory_adailyusage where update_date >= " + "'" + str(start_date) + "'"
+    df = pd.read_sql_query(select_query, con=db_conn)
+
+    # read latest 6 month
+    df_sorted = df.sort_values(by='update_date')
+    df_sorted['update_date'] = df_sorted['update_date'].apply(lambda dt: dt.replace(day=1))
+    df_sorted = df_sorted[df_sorted['sf_code'].str.upper() == code.upper()]
+    df_sorted = df_sorted[["cust_name", "update_date", "sf_code", "unit", "product_name", "pickup_qty"]]    
+
+    if len(df_sorted) > 0:
+        prod_name_daily = df_sorted.iloc[0][4]
+    else:
+        prod_name_daily = ''
+    #df_sorted = df_sorted[df_sorted['cust_name'] == 'GG']
+    #df_sorted
+    if len(df_sorted) > 0:
+        df_pivoted = pd.pivot_table(df_sorted, values='pickup_qty', index=['cust_name', 'unit'], columns='update_date', aggfunc=np.sum, margins=True).fillna(0)
+        #d = pd.pivot_table(df_sorted, values='pickup_qty', index=['cust_name'], columns='update_date').fillna(0)
+        df_result_daily = df_pivoted.sort_values(('All'), ascending=False).reset_index()
+        #len(df_result.columns)
+        df_result_daily['AVE'] = (df_result_daily['All'] / (len(df_result_daily.columns)-3)).round(decimals=1)
+    else:
+        df_result_daily = None
+    return df_result_daily, prod_name_daily
 
 
 def read_excel(bbd_range, location, code, product_name, pallet):
