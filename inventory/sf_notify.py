@@ -6,11 +6,16 @@ import requests
 
 
 URL = 'https://notify-api.line.me/api/notify'
-TOKEN = 'iOZ9loBzZ5kCPFGCynEPYQ2mU1LYzFkI2FO6P3ZGn6a'
+#TOKEN = 'iOZ9loBzZ5kCPFGCynEPYQ2mU1LYzFkI2FO6P3ZGn6a'
+TOKEN = 'pwxL2dm2JYyUAczaWmgeJL3Ni0CUwj55KsuMVqs323C'
 
 def send_message(sf_code, container_name):
     now = datetime.now()
     current_time = now.strftime("%Y-%m-%d %H:%M")
+    # add if cond
+    if container_name is None:
+        container_name = '(unknown)'
+
     msg = sf_code + ' from ' + container_name + ' container progress has been updated at ' + current_time
     """Send a LINE Notify message (with or without an image)."""
     headers = {'Authorization': 'Bearer ' + TOKEN}

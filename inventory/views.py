@@ -115,7 +115,7 @@ def per_product_usage(request):
     else:
         os.chdir(r"\\192.168.20.50\AlexServer\SD共有\ボタニーパレット")    
 
-    return render(request, 'inventory/per_product_usage.html', {'df_result': df_result, 'code': code, 'prod_name': prod_name,
+    return render(request, 'inventory/per_product_usage.html', {'df_result': df_result, 'code': code.upper(), 'prod_name': prod_name,
                                                                 'df_result_daily': df_result_daily, 'prod_name_daily': prod_name_daily} )    
 
 
@@ -299,7 +299,8 @@ def read_db_for_per_product_usage_main(code):
 
     # read latest 6 month
     df_sorted = df.sort_values(by='update_date')
-    df_sorted['update_date'] = df_sorted['update_date'].apply(lambda dt: dt.replace(day=1))
+    #df_sorted['update_date'] = df_sorted['update_date'].apply(lambda dt: dt.replace(day=1))
+    df_sorted['update_date'] = df_sorted['update_date'].apply(lambda x: x.strftime('%Y-%m'))
     df_sorted = df_sorted[df_sorted['sf_code'].str.upper() == code.upper()]
     df_sorted = df_sorted[["cust_name", "update_date", "sf_code", "unit", "product_name", "pickup_qty"]]    
 
@@ -333,7 +334,8 @@ def read_db_for_per_product_usage_daily(code):
 
     # read latest 6 month
     df_sorted = df.sort_values(by='update_date')
-    df_sorted['update_date'] = df_sorted['update_date'].apply(lambda dt: dt.replace(day=1))
+    #df_sorted['update_date'] = df_sorted['update_date'].apply(lambda dt: dt.replace(day=1))
+    df_sorted['update_date'] = df_sorted['update_date'].apply(lambda x: x.strftime('%Y-%m'))
     df_sorted = df_sorted[df_sorted['sf_code'].str.upper() == code.upper()]
     df_sorted = df_sorted[["cust_name", "update_date", "sf_code", "unit", "product_name", "pickup_qty"]]    
 

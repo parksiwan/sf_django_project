@@ -199,16 +199,25 @@ class NoStockItems(models.Model):
 
     container_name_choices = (
         ('COF', 'COF'),
+        ('EEL', 'EEL'),
+        ('FO', 'FO'),
+        ('GN', 'GN'),
+        ('Gyoren', 'Gyoren'),
+        ('ITABASHI', 'ITABASHI'),
+        ('LUF', 'LUF'),
+        ('NW', 'NW'),
+        ('OIL', 'OIL'),
+        ('QP', 'QP'),
+        ('STI', 'STI'),
         ('TEP', 'TEP'),
         ('TWIN', 'TWIN'),
-        ('ITABASHI', 'ITABASHI'),
-        ('QP', 'QP'),
-        ('NW', 'NW'),
         ('VFK', 'VFK'),
-        ('EEL', 'EEL'),
+        ('YamasaFRZ', 'YamasaFRZ'),
+        ('YM', 'YM'),
+        
     )
-    container_name = models.CharField(max_length=50, choices=container_name_choices, null=True)    
-    container_eta = models.DateField()
+    container_name = models.CharField(max_length=50, choices=container_name_choices, null=True, blank=True)    
+    container_eta = models.DateField(null=True, blank=True)
     
     container_status_choices = (
         ('normal', 'Normal'),
@@ -219,15 +228,15 @@ class NoStockItems(models.Model):
         ('D5', 'Delay 5'),
         ('D6', 'Delay 6'),
     )
-    container_status = models.CharField(max_length=30, choices=container_status_choices, default='controlling')
+    container_status = models.CharField(max_length=30, choices=container_status_choices, null=True, blank=True)
 
-    customer = models.CharField(max_length=100, null=True)
+    customer = models.CharField(max_length=100, null=True, blank=True)
     stock_status_choices = (
         ('closed', 'Closed'),
         ('nostock', 'No Stock'),
         ('controlling', 'Controlling'),        
     )
-    stock_status = models.CharField(max_length=30, choices=stock_status_choices, default='controlling')
+    stock_status = models.CharField(max_length=30, choices=stock_status_choices, null=True, blank=True)
     remark = models.TextField(blank=True, null=True)
     
 

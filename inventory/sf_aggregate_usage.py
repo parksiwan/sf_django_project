@@ -39,11 +39,17 @@ def convert_string_to_date(date_string):
     raise ValueError('no valid date format found')
 
 
-def convert_excel_date(excel_book, excel_date):
+# add file_path parm
+def convert_excel_date(excel_book, excel_date, file_path):
     ms_bbd_date_number = excel_date
-    year, month, day, hour, minute, second = xlrd.xldate_as_tuple(ms_bbd_date_number, excel_book.datemode)
-    py_date = datetime.datetime(year, month, day, hour, minute, second)
-    return py_date
+    # Modified on 28/10/2020
+    try:
+        year, month, day, hour, minute, second = xlrd.xldate_as_tuple(ms_bbd_date_number, excel_book.datemode)
+        py_date = datetime.datetime(year, month, day, hour, minute, second)
+        return py_date
+    except ValueError:
+        print (file_path)
+        
 
 
 def read_excel_for_current_usage():
@@ -86,7 +92,7 @@ def generate_data_frame_for_current_usage(file_path):
     while sheet.cell(i, 1).value != 'end':
         # Convert excel date to python date
         if sheet.cell(i, 5).ctype == 3 or sheet.cell(i, 5).ctype == 2:
-            inward_date = convert_excel_date(wb, sheet.cell(i, 5).value).date()
+            inward_date = convert_excel_date(wb, sheet.cell(i, 5).value, file_path).date()
         elif sheet.cell(i, 5).ctype == 0:
             inward_date = datetime.datetime.strptime('01/01/2020', "%d/%m/%Y").date()
         elif sheet.cell(i, 5).ctype == 1:
@@ -95,7 +101,7 @@ def generate_data_frame_for_current_usage(file_path):
             inward_date = datetime.datetime.strptime('01/01/2020', "%d/%m/%Y").date()
         # Convert excel date to python date
         if sheet.cell(i, 18).ctype == 3 or sheet.cell(i, 18).ctype == 2:
-            bbd_date = convert_excel_date(wb, sheet.cell(i, 18).value).date()
+            bbd_date = convert_excel_date(wb, sheet.cell(i, 18).value, file_path).date()
         elif sheet.cell(i, 18).ctype == 0:
             bbd_date = inward_date
         elif sheet.cell(i, 18).ctype == 1:
