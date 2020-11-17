@@ -30,10 +30,10 @@ class ViewAdmin(ImportExportModelAdmin):
 
 @admin.register(Usage)
 class ViewAdmin(ImportExportModelAdmin):
-    list_display = ['update_date','product_type', 'sf_code','product_name', 'pickup_qty', 'unit', 'cust_name']
-    search_fields = ['sf_code', 'update_date', 'cust_name', 'product_name']
+    list_display = ['update_date','product_type', 'sf_code','product_name', 'pickup_qty', 'unit', 'cust_name', 'memo']
+    search_fields = ['sf_code', 'update_date', 'memo', 'product_name']
     filter_horizontal = ()
-    list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('unit', DropdownFilter), ('cust_name', DropdownFilter)]
+    list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('unit', DropdownFilter), ('cust_name', DropdownFilter)]    
     date_hierarchy = 'update_date'
     fieldsets = ()
 
@@ -51,7 +51,7 @@ class ViewAdmin(ImportExportModelAdmin):
     list_display = ['update_date','product_type', 'sf_code','origin', 'product_name', 'pickup_qty', 'unit', 'cust_name']
     search_fields = ['sf_code', 'update_date', 'cust_name', 'product_name']
     filter_horizontal = ()
-    list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('unit', DropdownFilter), ('cust_name', DropdownFilter)]
+    list_filter = ['update_date', ('product_type', DropdownFilter), ('sf_code', DropdownFilter), ('unit', DropdownFilter), ('cust_name', DropdownFilter)]    
     date_hierarchy = 'update_date'
     fieldsets = ()
     
@@ -77,7 +77,7 @@ copy_storagetransactlog.short_description = "Make a Copy of TransactLog"
 @admin.register(StorageTransactLog)
 class ViewAdmin(ImportExportModelAdmin):
     actions = [copy_storagetransactlog] 
-    list_display = ['transact_date', 'transact_time', 'storage_loc', 'total_pallet_before_transaction', 'transact_type', 'pallet_qty', 'total_pallet_after_transaction']
+    list_display = ['transact_date', 'transact_time', 'storage_loc', 'total_pallet_before_transaction', 'transact_type', 'box_qty', 'pallet_qty', 'total_pallet_after_transaction']
     search_fields = ['transact_date', 'storage_loc', 'transact_type' ]
     filter_horizontal = ()
     list_filter = ['transact_date', ('storage_loc', DropdownFilter), ('transact_type', DropdownFilter)]
@@ -95,7 +95,7 @@ class ViewAdmin(ImportExportModelAdmin):
     date_hierarchy = 'update_date'
     fieldsets = ()
 
-
+   
 @admin.register(NoStockItems)
 class ViewAdmin(ImportExportModelAdmin):
     list_display = ['sf_code', 'product_name', 'product_spec', 'container_name', 'container_eta', 'container_status', 'stock_status']
@@ -108,5 +108,4 @@ class ViewAdmin(ImportExportModelAdmin):
 
 
 
-    
 

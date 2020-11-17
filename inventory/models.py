@@ -162,9 +162,12 @@ class StorageTransactLog(models.Model):
     transact_type = models.CharField(max_length=20, choices=transaction_type_choices, default='OUT')
     total_pallet_before_transaction = models.FloatField(null=True)
     #total_pallet_before_transaction = models.ForeignKey(StoragePalletQty, on_delete=models.CASCADE)
+    box_qty = models.FloatField(null=True, blank=True)
 
     pallet_qty = models.FloatField(null=True)
     total_pallet_after_transaction = models.FloatField(null=True, blank=True)
+
+    
 
     class Meta:
         verbose_name = "Storage Transaction Log"
