@@ -31,3 +31,37 @@ class Stock(models.Model):
     class Meta:
         verbose_name = "Plenus Stock"
         verbose_name_plural = "Plenus Stocks"
+
+
+class CKStock(models.Model):
+    transact_type_choices = (
+        ('IN', 'IN'),
+        ('OUT', 'OUT'),
+    )
+    transact_type = models.CharField(max_length=20, choices=transact_type_choices, default='OUT')
+    transact_date = models.DateField()
+
+    pallet = models.CharField(max_length=20)
+    sf_code = models.CharField(max_length=20)
+
+    product_type = models.CharField(max_length=10, null=True)    
+    product_name = models.CharField(max_length=300, null=True)
+    description = models.CharField(max_length=300, null=True)
+        
+    box_qty = models.FloatField(null=True, blank=True)  # CTN only
+    pallet_qty = models.FloatField(null=True)
+
+    bbd = models.DateField(null=True)
+    pickup_by_choices = (
+        ('NA', 'N/A'),
+        ('CTN', 'OUT'),
+        ('PACK', 'PACK')
+    )
+    pickup_by = models.CharField(max_length=20, choices=pickup_by_choices, default='CTN')
+    memo = models.CharField(max_length=300, null=True)
+    
+    class Meta:
+        verbose_name = "CK Stock Transaction"
+        verbose_name_plural = "CK Stock Transactions"
+
+    

@@ -25,3 +25,13 @@ class ViewAdmin(ImportExportModelAdmin):
     fieldsets = ()
 
     
+@admin.register(CKStock)
+class ViewAdmin(ImportExportModelAdmin):
+    list_display = ['transact_type', 'transact_date', 'pallet', 'sf_code', 'product_name', 'box_qty', 'pickup_by', 'bbd']
+    search_fields = ['sf_code', 'pallet', 'product_name']
+    filter_horizontal = ()
+    list_filter = [('pallet', DropdownFilter), ('sf_code', DropdownFilter), ('product_name', DropdownFilter)]
+    date_hierarchy = 'transact_date'
+    fieldsets = ()
+
+
