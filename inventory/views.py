@@ -14,6 +14,7 @@ from django.http import HttpResponse
 
 
 # Create your views here.
+#wow
 def home_normal(request):    
     return render(request, 'inventory/home_normal.html')
 
